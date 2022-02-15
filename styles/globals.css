@@ -1,3 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: rush;
+  src: url('../public/ZhiMangXing-Regular.ttf');
+}
+
+
 html,
 body {
   padding: 0;
@@ -13,4 +23,10 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
