@@ -1,7 +1,8 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   return (
@@ -14,7 +15,14 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https:/blog.shuaxindiary.cn">My Toys Space!</a>
+          Welcome to{" "}
+          <a
+            href="https:/blog.shuaxindiary.cn"
+            target="_blank"
+            rel="noreferrer"
+          >
+            My Toys Space!
+          </a>
         </h1>
 
         <p className={styles.description}>
@@ -22,15 +30,23 @@ const Home: NextPage = () => {
         </p>
 
         <div className={styles.grid}>
-          <a href="/resume" className={styles.card}>
-            <h2>Github Resume &rarr;</h2>
-            <p>Generate resume by your github message.</p>
-          </a>
+          <Link href="/resume" passHref>
+            <div className={styles.card}>
+              <>
+                <h2>Github Resume &rarr;</h2>
+                <p>Generate resume by your github message.</p>
+              </>
+            </div>
+          </Link>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Couplet &rarr;</h2>
-            <p>Happy New Year !</p>
-          </a>
+          <Link href="/couplet" passHref>
+            <div className={styles.card}>
+              <>
+                <h2>Couplet &rarr;</h2>
+                <p>Happy New Year !</p>
+              </>
+            </div>
+          </Link>
 
           {/* <a
             href="https://github.com/vercel/next.js/tree/canary/examples"
@@ -58,14 +74,14 @@ const Home: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
