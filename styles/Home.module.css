@@ -76,6 +76,7 @@
 .card {
   min-height: 162px;
   min-width: 300px;
+  cursor: pointer;
   margin: 1rem;
   padding: 1.5rem;
   text-align: left;
