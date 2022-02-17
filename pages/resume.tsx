@@ -1,5 +1,6 @@
 import "devicon";
-import { ReactElement } from "react";
+import { NextApiRequest, NextApiResponse, NextPage } from "next";
+import { ReactElement, ReactNode } from "react";
 import Calendar from "react-github-contribution-calendar";
 import { DetailCard, MsgBar, UserInfo } from "../components/index";
 import BackUp from "../layouts/BackUp";
@@ -11,6 +12,7 @@ import {
   Twitter,
   Website
 } from "../public/svg";
+import _ from "../utils/index";
 
 const basicInfo = [
   {
@@ -59,7 +61,10 @@ const styles = {
     "mt-[10px] rounded-xl h-[830px] cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-[1.06]",
 };
 
-const Resume = () => {
+const Resume: NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+} = (props) => {
+  console.log(props);
   return (
     <div className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
       <div className="w-[700px] max-h-[850px] flex flex-row m-auto">
@@ -174,6 +179,36 @@ const Resume = () => {
 
 export default Resume;
 
+// 布局组件
 Resume.getLayout = (page: ReactElement) => {
   return <BackUp>{page}</BackUp>;
+};
+
+// 服务端请求后渲染
+export const getServerSideProps = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const { data } = await _.req({
+    url: "http://localhost:3000/api/github",
+    opts: {
+      method: "POST",
+      body: JSON.stringify({
+        code: req.query.code,
+      }),
+    },
+  });
+  if (data.error) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {
+      ...data,
+    },
+  };
 };

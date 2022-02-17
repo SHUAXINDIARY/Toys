@@ -1,8 +1,65 @@
-import type { NextPage } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import config from "../config";
 import styles from "../styles/Home.module.css";
+type HomeCardProps = {
+  title: string;
+  url: string;
+  desc?: string;
+  openNewTag?: Boolean;
+};
+
+const CardDataList: HomeCardProps[] = [
+  {
+    title: "Github Resume",
+    url: `https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}&redirect_uri=${config.redirect_uri}`,
+    desc: "Generate resume by your github message.",
+    openNewTag: false,
+  },
+  {
+    title: "Couplet",
+    url: "/couplet",
+    desc: "Happy New Year !",
+  },
+  {
+    title: "Blog",
+    url: "https://blog.shuaxindiary.cn",
+    desc: "My blog",
+  },
+  {
+    title: "Github",
+    url: "https://github.com/SHUAXINDIARY",
+    desc: "Generate resume by your github message",
+  },
+];
+
+const HomeCard = ({ title, desc, url, openNewTag = true }: HomeCardProps) => {
+  const isA = ["http", "https"].includes(url.split(":")[0]);
+  if (isA) {
+    return (
+      <a href={url} target={openNewTag ? "_blank" : ""} rel="noreferrer">
+        <div className={styles.card}>
+          <>
+            <h2>{title} &rarr;</h2>
+            <p>{desc}</p>
+          </>
+        </div>
+      </a>
+    );
+  }
+  return (
+    <Link href={url} passHref>
+      <div className={styles.card}>
+        <>
+          <h2>{title} &rarr;</h2>
+          <p>{desc}</p>
+        </>
+      </div>
+    </Link>
+  );
+};
 
 const Home: NextPage = () => {
   return (
@@ -30,44 +87,9 @@ const Home: NextPage = () => {
         </p>
 
         <div className={styles.grid}>
-          <Link href="/resume" passHref>
-            <div className={styles.card}>
-              <>
-                <h2>Github Resume &rarr;</h2>
-                <p>Generate resume by your github message.</p>
-              </>
-            </div>
-          </Link>
-
-          <Link href="/couplet" passHref>
-            <div className={styles.card}>
-              <>
-                <h2>Couplet &rarr;</h2>
-                <p>Happy New Year !</p>
-              </>
-            </div>
-          </Link>
-
-          <a
-            href="https://blog.shuaxindiary.cn"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div className={styles.card}>
-              <h2>Blog &rarr;</h2>
-              <p>Record Note.</p>
-            </div>
-          </a>
-
-          <a
-            href="https://github.com/SHUAXINDIARY"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <div className={styles.card}>
-              <h2>Github &rarr;</h2>
-            </div>
-          </a>
+          {CardDataList.map((item) => {
+            return <HomeCard key={item.url} {...item} />;
+          })}
         </div>
       </main>
 

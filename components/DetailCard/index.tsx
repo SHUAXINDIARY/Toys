@@ -1,6 +1,6 @@
 import { FC, ReactElement } from "react";
 
-interface IDetailCard {
+type IDetailCard = {
     title: string;
     children?: ReactElement;
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 
-interface BackUpProps {
+type BackUpProps = {
   children?: ReactNode;
   backNode?: ReactNode;
 }
@@ -13,6 +13,7 @@ const BackBtn = () => {
     </Link>
   );
 };
+
 const BackUp = ({ children, backNode }: BackUpProps) => {
   return (
     <>

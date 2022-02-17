@@ -1,6 +1,6 @@
 import { FC, ReactElement } from "react";
 
-interface IMsgBar {
+type IMsgBar = {
     text?: string;
     link?: string;
     icon?: any;

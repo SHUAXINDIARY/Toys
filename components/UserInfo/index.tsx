@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-interface IUserInfo {
+type IUserInfo = {
     avatar: string;
     name: string;
     nickName: string;
