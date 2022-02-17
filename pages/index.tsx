@@ -62,7 +62,6 @@ const Home: NextPage = () => {
           <a href="https://github.com/SHUAXINDIARY">
             <div className={styles.card}>
               <h2>Github &rarr;</h2>
-              <p>{/* My github home page. */}</p>
             </div>
           </a>
         </div>
