@@ -59,7 +59,11 @@ const Home: NextPage = () => {
             </div>
           </a>
 
-          <a href="https://github.com/SHUAXINDIARY">
+          <a
+            href="https://github.com/SHUAXINDIARY"
+            target="_blank"
+            rel="noreferrer"
+          >
             <div className={styles.card}>
               <h2>Github &rarr;</h2>
             </div>

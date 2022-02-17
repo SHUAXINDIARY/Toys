@@ -2,6 +2,7 @@ import { Fireworks } from "fireworks-js/dist/react";
 import { CSSProperties, ReactElement } from "react";
 import Typewriter from "typewriter-effect";
 import BackUp from "../layouts/BackUp";
+
 const commSty = {
   font: "text-center text-yellow-300 text-[35px] font-bold",
   bg: "bg-red-600 border-yellow-300 border-4 m-auto",

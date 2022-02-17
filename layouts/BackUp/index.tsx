@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ReactNode } from "react";
 
 interface BackUpProps {
@@ -6,17 +7,20 @@ interface BackUpProps {
 }
 
 const BackBtn = () => {
-  return <button>back up</button>;
+  return (
+    <Link href="/" passHref>
+      <button className="btn btn-link">BACKUP</button>
+    </Link>
+  );
 };
 const BackUp = ({ children, backNode }: BackUpProps) => {
   return (
-    <div className="w-screen h-screen">
+    <>
       <div>{children}</div>
-      <div className="absolute right-0 bottom-0 text-red-600">
-        {/* <div>{backNode || BackBtn()}</div> */}
-        12312
+      <div className="absolute right-0 bottom-0 text-red-600 p-3 cursor-pointer">
+        <div>{backNode || BackBtn()}</div>
       </div>
-    </div>
+    </>
   );
 };
 export default BackUp;
