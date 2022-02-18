@@ -31,3 +31,21 @@ export type HomeCardProps = {
   desc?: string;
   openNewTag?: Boolean;
 };
+
+export type UserInfoProps = {
+  login: string;
+  name: string;
+  avatar_url: string;
+  followers: number;
+  following: number;
+  blog: string;
+  company: string;
+  twitter_username: string;
+  public_repos: number;
+  // github url
+  html_url: string;
+  // 签名
+  bio: string;
+  email: string;
+  location: string;
+};

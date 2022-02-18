@@ -15,7 +15,7 @@ import {
   Twitter,
   Website
 } from "../public/svg";
-import { LayoutType } from "../types/index";
+import { LayoutType, UserInfoProps } from "../types/index";
 import { languageIcon, panelColors } from "../utils/constant";
 
 const basicInfo = [
@@ -53,13 +53,35 @@ const styles = {
     "mt-[10px] rounded-xl h-[830px] cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-[1.06]",
 };
 
-const Resume: NextPage & LayoutType = (props) => {
+type ResumeProps = {
+  userInfo?: UserInfoProps;
+};
+const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo }) => {
+  const basicInfo = [
+    {
+      icon: Email,
+      link: userInfo?.email,
+    },
+    {
+      icon: Website,
+      link: userInfo?.blog,
+    },
+    {
+      icon: Twitter,
+      link: `https://twitter.com/search?q=${userInfo?.twitter_username}&src=typed_query&f=user`,
+    },
+    {
+      icon: Github,
+      link: userInfo?.html_url,
+    },
+  ];
   const { token } = useContext(StoreCtx);
   const router = useRouter();
   useEffect(() => {
-    if (token || token.length <= 0) {
+    if (!token || token.length <= 0) {
       router.replace("/loginGithub");
     }
+    console.log(userInfo);
   }, []);
   return (
     <div className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
@@ -68,37 +90,33 @@ const Resume: NextPage & LayoutType = (props) => {
           className={`w-[320px] ml-[14px] mr-[20px] bg-[#8080806b] hover:bg-[#80808091] ${styles.common}`}
         >
           <UserInfo
-            name="SHUAXIN"
-            nickName="SHUAXINDIARY"
-            avatar="https://img.shuaxindiary.cn/newavatar.jpg"
+            name={userInfo?.name || ""}
+            nickName={userInfo?.login || ""}
+            avatar={userInfo?.avatar_url || ""}
           />
           <div className="mb-3 flex w-[260px] m-auto">
             {basicInfo.map(({ icon, link }, i) => {
-              return <MsgBar key={link + i} icon={icon} link={link} />;
+              return <MsgBar key={link || '' + i} icon={icon} link={link} />;
             })}
           </div>
-          <MsgBar icon={Location} text="Beijing." />
-          <MsgBar icon={Company} text="ByteDance." />
+          <MsgBar icon={Location} text={userInfo?.location} />
+          {userInfo?.company && <MsgBar icon={Company} text={userInfo?.company} />}
           <MsgBar title="Introduction">
-            <p className="indent-3">A self-funded solo founder.</p>
+            <p className="indent-3">{userInfo?.bio}</p>
           </MsgBar>
           <MsgBar title="Basic Info">
-            <ul className="flex flex-row">
+            <ul className="flex flex-row justify-center">
               <li className={`${styles.count}`}>
-                <span>99</span>
+                <span>{userInfo?.public_repos}</span>
                 <span>Repos</span>
               </li>
               <li className={`${styles.count}`}>
-                <span>99</span>
+                <span>{userInfo?.following}</span>
                 <span>Following</span>
               </li>
               <li className={`${styles.count}`}>
-                <span>99</span>
+                <span>{userInfo?.followers}</span>
                 <span>Followers</span>
-              </li>
-              <li className={`${styles.count}`}>
-                <span>99</span>
-                <span>Stars</span>
               </li>
             </ul>
           </MsgBar>
