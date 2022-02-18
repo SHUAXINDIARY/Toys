@@ -1,8 +1,11 @@
+import { Octokit } from "@octokit/core";
 import "devicon";
-import { NextApiRequest, NextApiResponse, NextPage } from "next";
-import { ReactElement, ReactNode } from "react";
+import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
+import { ReactElement, useContext, useEffect } from "react";
 import Calendar from "react-github-contribution-calendar";
 import { DetailCard, MsgBar, UserInfo } from "../components/index";
+import { StoreCtx } from "../context";
 import BackUp from "../layouts/BackUp";
 import {
   Company,
@@ -12,7 +15,8 @@ import {
   Twitter,
   Website
 } from "../public/svg";
-import _ from "../utils/index";
+import { LayoutType } from "../types/index";
+import { languageIcon, panelColors } from "../utils/constant";
 
 const basicInfo = [
   {
@@ -33,26 +37,14 @@ const basicInfo = [
   },
 ];
 const values = {
-  "2022-1-23": 1,
-  "2022-1-26": 2,
-  "2022-1-27": 3,
-  "2022-1-28": 4,
-  "2022-1-29": 4,
+  "2022-01-23": 1,
+  "2022-01-26": 2,
+  "2022-01-27": 3,
+  "2022-01-28": 4,
+  "2022-01-29": 4,
 };
-const until = "2022-12-30";
+const until = "2022-01-30";
 
-const panelColors = [
-  "#fdf4ff",
-  "#fae8ff",
-  "#f5d0fe",
-  "#f0abfc",
-  "#e879f9",
-  "#d946ef",
-  "#c026d3",
-  "#a21caf",
-  "#86198f",
-  "#701a75",
-];
 // 一些通用 css
 const styles = {
   listHover: "hover:scale-[1.5] text-center transition-all duration-150",
@@ -61,10 +53,14 @@ const styles = {
     "mt-[10px] rounded-xl h-[830px] cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-[1.06]",
 };
 
-const Resume: NextPage & {
-  getLayout?: (page: ReactElement) => ReactNode;
-} = (props) => {
-  console.log(props);
+const Resume: NextPage & LayoutType = (props) => {
+  const { token } = useContext(StoreCtx);
+  const router = useRouter();
+  useEffect(() => {
+    if (token || token.length <= 0) {
+      router.replace("/loginGithub");
+    }
+  }, []);
   return (
     <div className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
       <div className="w-[700px] max-h-[850px] flex flex-row m-auto">
@@ -108,47 +104,34 @@ const Resume: NextPage & {
           </MsgBar>
           <MsgBar title="Language">
             <ul className="indent-4 text-2xl flex flex-wrap">
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-typescript-plain colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-css3-plain colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-vuejs-plain colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-javascript-plain colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-react-original colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-go-original-wordmark colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-svelte-plain colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-java-plain colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-python-plain colored"></i>
-              </li>
-              <li className={`${styles.listHover}`}>
-                <i className="devicon-nodejs-plain colored"></i>
-              </li>
+              {languageIcon.map((item) => {
+                const iconUrl = item.colored
+                  ? `devicon-${item.language}-${item.style} ${
+                      item.colored ? "colored" : ""
+                    }`
+                  : `devicon-${item.language}-${item.style}`;
+                return (
+                  <li
+                    key={item.language}
+                    className={`${styles.listHover} group`}
+                  >
+                    <i className={iconUrl} />
+                  </li>
+                );
+              })}
             </ul>
           </MsgBar>
           <MsgBar title="Contribution">
             <Calendar
+              dateFormat="YYYY-MM-DD"
               until={until}
               values={values}
-              weekNames={[1, 2, 3, 4, 5, 6, 7].map((day) => String(day))}
+              weekNames={["s", "m", "t", "w", "t", "f", "s"].map((day) =>
+                day.toLocaleUpperCase()
+              )}
               monthNames={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((mon) =>
                 String(mon)
               )}
-              dateFormat=""
               weekLabelAttributes={null}
               monthLabelAttributes={null}
               panelColors={panelColors}
@@ -184,31 +167,26 @@ Resume.getLayout = (page: ReactElement) => {
   return <BackUp>{page}</BackUp>;
 };
 
-// 服务端请求后渲染
-export const getServerSideProps = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
-  const { data } = await _.req({
-    url: "http://localhost:3000/api/github",
-    opts: {
-      method: "POST",
-      body: JSON.stringify({
-        code: req.query.code,
-      }),
-    },
+// 构建客户端数据结构
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const octokit = new Octokit({
+    auth: query.token,
+    baseUrl: "https://api.github.com",
   });
-  if (data.error) {
+  try {
+    const { data } = await octokit.request("GET /user");
+    return {
+      props: {
+        userInfo: { ...data },
+      },
+    };
+  } catch (error) {
+    console.log(error);
     return {
       redirect: {
-        destination: "/",
+        destination: "/loginGithub",
         permanent: false,
       },
     };
   }
-  return {
-    props: {
-      ...data,
-    },
-  };
 };

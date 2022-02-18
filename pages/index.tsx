@@ -2,38 +2,9 @@ import { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import config from "../config";
 import styles from "../styles/Home.module.css";
-type HomeCardProps = {
-  title: string;
-  url: string;
-  desc?: string;
-  openNewTag?: Boolean;
-};
-
-const CardDataList: HomeCardProps[] = [
-  {
-    title: "Github Resume",
-    url: `https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}&redirect_uri=${config.redirect_uri}`,
-    desc: "Generate resume by your github message.",
-    openNewTag: false,
-  },
-  {
-    title: "Couplet",
-    url: "/couplet",
-    desc: "Happy New Year !",
-  },
-  {
-    title: "Blog",
-    url: "https://blog.shuaxindiary.cn",
-    desc: "My blog",
-  },
-  {
-    title: "Github",
-    url: "https://github.com/SHUAXINDIARY",
-    desc: "Generate resume by your github message",
-  },
-];
+import { HomeCardProps } from "../types";
+import { CardDataList } from "../utils/constant";
 
 const HomeCard = ({ title, desc, url, openNewTag = true }: HomeCardProps) => {
   const isA = ["http", "https"].includes(url.split(":")[0]);

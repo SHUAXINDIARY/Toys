@@ -1,7 +1,9 @@
 import { Fireworks } from "fireworks-js/dist/react";
+import { NextPage } from "next";
 import { CSSProperties, ReactElement } from "react";
 import Typewriter from "typewriter-effect";
 import BackUp from "../layouts/BackUp";
+import { LayoutType } from "../types";
 
 const commSty = {
   font: "text-center text-yellow-300 text-[35px] font-bold",
@@ -41,7 +43,7 @@ const _TypeWriter = (text: string, className: string, time: number) => {
   );
 };
 
-const Couplet = () => {
+const Couplet: NextPage & LayoutType = () => {
   const { top, left, right } = {
     top: "早点下班",
     left: "文档注释一应俱全",

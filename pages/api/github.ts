@@ -6,17 +6,22 @@ import _ from "../../utils/index";
 type Data = {
   data: any;
 };
+
+export type Succ = {
+  access_token: string;
+  scope: string;
+  token_type: string;
+};
+
 // 获取token
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const _resData = await _.req({
+  const _resData = await _.req<Succ>({
     url: `https://github.com/login/oauth/access_token?client_id=${
       config.client_id
-    }&client_secret=${config.client_secret}&redirect_uri=${
-      config.redirect_uri
-    }&code=${JSON.parse(req.body).code}`,
+    }&client_secret=${config.client_secret}&code=${JSON.parse(req.body).code}`,
     opts: {
       headers: {
         Accept: "application/json",
