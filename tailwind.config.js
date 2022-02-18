@@ -6,6 +6,18 @@ module.exports = {
     "./layouts/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      next: [
+        "Menlo",
+        "Monaco",
+        "Lucida Console",
+        "Liberation Mono",
+        "DejaVu Sans Mono",
+        "Bitstream Vera Sans Mono",
+        "Courier New",
+        "monospace",
+      ],
+    },
     extend: {},
   },
   plugins: [require("daisyui")],
