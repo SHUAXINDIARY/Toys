@@ -14,13 +14,14 @@ const LoginGithub: NextPage<{
   const router = useRouter();
   const store = useContext(StoreCtx);
   useEffect(() => {
+    console.log(data);
     if (data && data.access_token) {
       store.token = data.access_token;
       router.push({
         pathname: "/resume",
-        query: {
-          token: data.access_token,
-        },
+        query:{
+          token:data.access_token
+        }
       });
     } else {
       router.replace("/loginGithub");
@@ -28,7 +29,7 @@ const LoginGithub: NextPage<{
   }, []);
   return (
     <a
-      href={`https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}&redirect_uri=${config.redirect_uri}`}
+      href={`https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}`}
     >
       <div className="btn btn-primary">登陆</div>
     </a>

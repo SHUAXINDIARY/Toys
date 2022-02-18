@@ -13,29 +13,17 @@ import {
   Github,
   Location,
   Twitter,
-  Website
+  Website,
 } from "../public/svg";
-import { LayoutType, UserInfoProps } from "../types/index";
-import { languageIcon, panelColors } from "../utils/constant";
+import {
+  IconStyle,
+  LayoutType,
+  RepoProps,
+  UserInfoProps,
+} from "../types/index";
+import _ from "../utils";
+import { panelColors } from "../utils/constant";
 
-const basicInfo = [
-  {
-    icon: Email,
-    link: "shuaxinjs@qq.com",
-  },
-  {
-    icon: Website,
-    link: "https://img.shuaxindiary.cn",
-  },
-  {
-    icon: Twitter,
-    link: "shuaxinjs@qq.com",
-  },
-  {
-    icon: Github,
-    link: "https://github.com/SHUAXINDIARY",
-  },
-];
 const values = {
   "2022-01-23": 1,
   "2022-01-26": 2,
@@ -55,8 +43,9 @@ const styles = {
 
 type ResumeProps = {
   userInfo?: UserInfoProps;
+  language?: RepoProps[];
 };
-const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo }) => {
+const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo, language }) => {
   const basicInfo = [
     {
       icon: Email,
@@ -82,6 +71,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo }) => {
       router.replace("/loginGithub");
     }
     console.log(userInfo);
+    console.log(language);
   }, []);
   return (
     <div className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
@@ -96,11 +86,13 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo }) => {
           />
           <div className="mb-3 flex w-[260px] m-auto">
             {basicInfo.map(({ icon, link }, i) => {
-              return <MsgBar key={link || '' + i} icon={icon} link={link} />;
+              return <MsgBar key={link || "" + i} icon={icon} link={link} />;
             })}
           </div>
           <MsgBar icon={Location} text={userInfo?.location} />
-          {userInfo?.company && <MsgBar icon={Company} text={userInfo?.company} />}
+          {userInfo?.company && (
+            <MsgBar icon={Company} text={userInfo?.company} />
+          )}
           <MsgBar title="Introduction">
             <p className="indent-3">{userInfo?.bio}</p>
           </MsgBar>
@@ -122,7 +114,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo }) => {
           </MsgBar>
           <MsgBar title="Language">
             <ul className="indent-4 text-2xl flex flex-wrap">
-              {languageIcon.map((item) => {
+              {language!.map((item) => {
                 const iconUrl = item.colored
                   ? `devicon-${item.language}-${item.style} ${
                       item.colored ? "colored" : ""
@@ -192,10 +184,16 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     baseUrl: "https://api.github.com",
   });
   try {
-    const { data } = await octokit.request("GET /user");
+    const { data: _userInfos } = await octokit.request("GET /user");
+    const language = await _.countLanguage(
+      _userInfos.public_repos,
+      _userInfos.login,
+      octokit
+    );  
     return {
       props: {
-        userInfo: { ...data },
+        userInfo: { ..._userInfos },
+        language: language,
       },
     };
   } catch (error) {

@@ -13,59 +13,6 @@ export const panelColors: string[] = [
   "#701a75",
 ];
 
-export const languageIcon: LanguageIcon[] = [
-  {
-    style: IconStyle.PLAIN,
-    language: "html5",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "css3",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "vuejs",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "react",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "go",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "svelte",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "java",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "python",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "nodejs",
-    colored: true,
-  },
-  {
-    style: IconStyle.PLAIN,
-    language: "typescript",
-    colored: true,
-  },
-];
-
 export const CardDataList: HomeCardProps[] = [
   {
     title: "Github Resume",
@@ -90,3 +37,10 @@ export const CardDataList: HomeCardProps[] = [
   },
 ];
 
+export const deviconLang: any = {
+  css: "css3",
+  vue: "vuejs",
+  scss: "sass",
+  angular: "angularjs",
+  html: "html5",
+};

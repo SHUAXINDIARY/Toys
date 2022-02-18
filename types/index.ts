@@ -49,3 +49,7 @@ export type UserInfoProps = {
   email: string;
   location: string;
 };
+
+export type RepoProps = {
+  [key: string]: number;
+};
