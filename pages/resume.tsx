@@ -3,7 +3,8 @@ import "devicon";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { ReactElement, useContext, useEffect } from "react";
-import Calendar from "react-github-contribution-calendar";
+import GitHubCalendar from "react-github-calendar";
+// import Calendar from "react-github-contribution-calendar";
 import { DetailCard, MsgBar, UserInfo } from "../components/index";
 import { StoreCtx } from "../context";
 import BackUp from "../layouts/BackUp";
@@ -15,15 +16,9 @@ import {
   Twitter,
   Website,
 } from "../public/svg";
-import {
-  IconStyle,
-  LayoutType,
-  RepoProps,
-  UserInfoProps,
-} from "../types/index";
+import { LayoutType, RepoProps, UserInfoProps } from "../types/index";
 import _ from "../utils";
 import { panelColors } from "../utils/constant";
-
 const values = {
   "2022-01-23": 1,
   "2022-01-26": 2,
@@ -44,8 +39,13 @@ const styles = {
 type ResumeProps = {
   userInfo?: UserInfoProps;
   language?: RepoProps[];
+  repoNames?: string[];
 };
-const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo, language }) => {
+const Resume: NextPage<ResumeProps> & LayoutType = ({
+  userInfo,
+  language,
+  repoNames,
+}) => {
   const basicInfo = [
     {
       icon: Email,
@@ -72,6 +72,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo, language }) => {
     }
     console.log(userInfo);
     console.log(language);
+    console.log(new Set(repoNames));
   }, []);
   return (
     <div className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
@@ -132,21 +133,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({ userInfo, language }) => {
             </ul>
           </MsgBar>
           <MsgBar title="Contribution">
-            <Calendar
-              dateFormat="YYYY-MM-DD"
-              until={until}
-              values={values}
-              weekNames={["s", "m", "t", "w", "t", "f", "s"].map((day) =>
-                day.toLocaleUpperCase()
-              )}
-              monthNames={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((mon) =>
-                String(mon)
-              )}
-              weekLabelAttributes={null}
-              monthLabelAttributes={null}
-              panelColors={panelColors}
-              panelAttributes
-            />
+            <GitHubCalendar username={userInfo?.login || ''}></GitHubCalendar>
           </MsgBar>
         </div>
         <div
@@ -185,15 +172,16 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   });
   try {
     const { data: _userInfos } = await octokit.request("GET /user");
-    const language = await _.countLanguage(
+    const { language, repoNames } = await _.countLanguage(
       _userInfos.public_repos,
       _userInfos.login,
       octokit
-    );  
+    );
     return {
       props: {
         userInfo: { ..._userInfos },
         language: language,
+        repoNames,
       },
     };
   } catch (error) {

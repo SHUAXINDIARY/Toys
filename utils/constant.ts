@@ -1,16 +1,21 @@
 import { HomeCardProps, IconStyle, LanguageIcon } from "../types/index";
 
 export const panelColors: string[] = [
-  "#fdf4ff",
-  "#fae8ff",
-  "#f5d0fe",
-  "#f0abfc",
-  "#e879f9",
-  "#d946ef",
-  "#c026d3",
-  "#a21caf",
-  "#86198f",
-  "#701a75",
+  // "#fdf4ff",
+  // "#fae8ff",
+  // "#f5d0fe",
+  // "#f0abfc",
+  // "#e879f9",
+  // "#d946ef",
+  // "#c026d3",
+  // "#a21caf",
+  // "#86198f",
+  // "#701a75",
+  "#ebedf0",
+  "#9be9a8",
+  "#40c463",
+  "#30a14e",
+  "#216e39",
 ];
 
 export const CardDataList: HomeCardProps[] = [
@@ -36,11 +41,3 @@ export const CardDataList: HomeCardProps[] = [
     desc: "My Github",
   },
 ];
-
-export const deviconLang: any = {
-  css: "css3",
-  vue: "vuejs",
-  scss: "sass",
-  angular: "angularjs",
-  html: "html5",
-};

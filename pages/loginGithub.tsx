@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     // github 定向
     const { data } = await _.req({
-      url: "http://localhost:3000/api/github",
+      url: "http://localhost:3000/api/getToken",
       opts: {
         method: "POST",
         body: JSON.stringify({

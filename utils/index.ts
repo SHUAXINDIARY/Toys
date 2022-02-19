@@ -1,6 +1,5 @@
 import { Octokit } from "@octokit/core";
 import { IconStyle, LanguageIcon } from "../types";
-import { deviconLang } from "./constant";
 import devicon from "devicon/devicon.json";
 
 type ReqProps = {
@@ -42,8 +41,12 @@ const countLanguage = async (
   repoTotal: number,
   userName: string,
   octokit: Octokit
-): Promise<LanguageIcon[]> => {
+): Promise<{
+  language: LanguageIcon[];
+  repoNames: string[];
+}> => {
   const languageMap: any = {};
+  const repoNames: string[] = [];
   let page = [1];
   let total = Math.ceil(repoTotal / 100);
   while (total > 0) {
@@ -63,7 +66,8 @@ const countLanguage = async (
   );
   // 聚合所有仓库的语言
   data.forEach((item) => {
-    item.data.forEach(({ language }) => {
+    item.data.forEach(({ language, name }) => {
+      repoNames.push(name);
       if (language && languageMap[language]) {
         languageMap[language]++;
       } else if (language && !languageMap[language]) {
@@ -71,13 +75,16 @@ const countLanguage = async (
       }
     });
   });
-  return Object.keys(languageMap).map((item) => {
-    return {
-      style: IconStyle.PLAIN,
-      language: filterLanguage(item.toLocaleLowerCase()),
-      colored: true,
-    };
-  });
+  return {
+    language: Object.keys(languageMap).map((item) => {
+      return {
+        style: IconStyle.PLAIN,
+        language: filterLanguage(item.toLocaleLowerCase()),
+        colored: true,
+      };
+    }),
+    repoNames,
+  };
 };
 
 const _ = {
