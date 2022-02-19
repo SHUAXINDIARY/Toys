@@ -133,7 +133,10 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
             </ul>
           </MsgBar>
           <MsgBar title="Contribution">
-            <GitHubCalendar username={userInfo?.login || ''}></GitHubCalendar>
+            <GitHubCalendar
+              hideTotalCount={true}
+              username={userInfo?.login || ""}
+            ></GitHubCalendar>
           </MsgBar>
         </div>
         <div

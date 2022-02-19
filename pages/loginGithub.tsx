@@ -19,20 +19,29 @@ const LoginGithub: NextPage<{
       store.token = data.access_token;
       router.push({
         pathname: "/resume",
-        query:{
-          token:data.access_token
-        }
+        query: {
+          token: data.access_token,
+        },
       });
     } else {
       router.replace("/loginGithub");
     }
   }, []);
   return (
-    <a
-      href={`https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}`}
-    >
-      <div className="btn btn-primary">登陆</div>
-    </a>
+    <div className="h-screen bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 flex justify-center items-center">
+      <div className="w-2/6 border mockup-window border-base-300">
+        <div className="flex justify-center px-4 py-16 border-t border-base-300">
+          <div className="text-center w-full">
+            <h1 className="text-4xl text-white mb-7">Github Resume</h1>
+            <a
+              href={`https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}`}
+            >
+              <div className="btn btn-primary">Login IN</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
