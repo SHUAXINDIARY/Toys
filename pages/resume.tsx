@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/core";
 import "devicon";
 import { GetServerSideProps, NextPage } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { ReactElement, useContext, useEffect, useState } from "react";
 import Calendar from "react-github-contribution-calendar";
@@ -31,18 +32,22 @@ const styles = {
   listHover: "hover:scale-[1.5] text-center transition-all duration-150",
   count: "flex flex-col text-center mr-2",
   common:
-    "mt-[10px] rounded-xl h-[830px] cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-[1.06]",
+    "mt-[10px] rounded-xl h-[830px] transition-all duration-300 hover:shadow-2xl hover:scale-[1.06]",
 };
 
 type ResumeProps = {
   userInfo?: UserInfoProps;
   language?: LanguageIcon[];
   topRepo?: RepoProps[];
+  starList?: any[];
+  followList?: any[];
 };
 const Resume: NextPage<ResumeProps> & LayoutType = ({
   userInfo,
   language,
   topRepo,
+  starList,
+  followList,
 }) => {
   const basicInfo = [
     {
@@ -83,6 +88,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
     }
     console.log(userInfo);
     console.log(topRepo);
+    console.log(followList);
     userInfo?.login && getContribution(userInfo?.login);
   }, []);
   return (
@@ -183,12 +189,16 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
           <DetailCard title="Time Section">
             <div>
               <p>
-                <span>{_.formatDate(userInfo?.created_at!)}</span> -{" "}
-                <span>Joined Github</span>
+                <span className="text-xl font-bold">
+                  {_.formatDate(userInfo?.created_at!)}
+                </span>{" "}
+                - <span>Joined Github</span>
               </p>
               <p>
-                <span>{_.formatDate(userInfo?.updated_at!)}</span> -{" "}
-                <span>Last Commit</span>
+                <span className="text-xl font-bold">
+                  {_.formatDate(userInfo?.updated_at!)}
+                </span>{" "}
+                - <span>Last Commit</span>
               </p>
             </div>
           </DetailCard>
@@ -197,27 +207,52 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
               {topRepo?.map((item) => {
                 return (
                   <div key={item.description} className="mb-6">
-                    <a href={item.html_url} target="_blank" rel="noreferrer">
-                      <h3 className="mb-3">
-                        <span className="text-2xl font-bold">{item.name}</span>{" "}
-                        -{" "}
-                        <span className="text-sm">{item.stargazers_count}</span>
-                      </h3>
-                    </a>
-                    <p>{item.description || "None description"}</p>
+                    <p className="text-[#1f2937] text-base">
+                      <a href={item.html_url} target="_blank" rel="noreferrer">
+                        {item.name}
+                      </a>
+                    </p>
+                    <p className="font-[800] text-4xl">
+                      {item.stargazers_count}
+                    </p>
                   </div>
                 );
               })}
             </>
           </DetailCard>
-          <DetailCard title="Get Around">
-            <p>最近star的 </p>
+          <DetailCard title="New Starred">
+            <>
+              {starList?.map((item) => {
+                return (
+                  <div key={item.description} className="mb-6">
+                    <a href={item.html_url} target="_blank" rel="noreferrer">
+                      <h3 className="mb-3">
+                        <span className="text-xl font-bold">{item.name}</span> -{" "}
+                        <span className="text-sm">{item.stargazers_count}</span>
+                      </h3>
+                    </a>
+                  </div>
+                );
+              })}
+            </>
           </DetailCard>
-          <DetailCard title="New Friends">
-            <p>最近关注</p>
-          </DetailCard>
-          <DetailCard title="New Love">
-            <p>最近被关注的</p>
+          <DetailCard title="New Follow">
+            <div className="flex justify-around flex-wrap w-[300px] mt-[-10px]">
+              {followList?.map((item) => {
+                return (
+                  <div key={item.avatar_url} className=" ml-5 mb-3">
+                    <a href={item.html_url} target="_blank" rel="noreferrer">
+                      <img
+                        src={item.avatar_url}
+                        alt="avatar"
+                        className=" w-14 h-14 rounded-[50%] m-auto"
+                      />
+                    </a>
+                    {/* <p className="w-full text-center">{item.login}</p> */}
+                  </div>
+                );
+              })}
+            </div>
           </DetailCard>
         </div>
       </div>
@@ -245,11 +280,19 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       _userInfos.login,
       octokit
     );
+    const starList = await _.newStar(_userInfos.login, octokit);
+    const followList = await _.newFollow(
+      _userInfos.login,
+      octokit,
+      _userInfos.following
+    );
     return {
       props: {
         userInfo: { ..._userInfos },
         language: language,
         topRepo: _.topThreeRepoByStar(repoInfos),
+        starList: starList.splice(0, 3),
+        followList: followList.splice(0, 6),
       },
     };
   } catch (error) {

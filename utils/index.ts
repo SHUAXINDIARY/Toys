@@ -50,9 +50,9 @@ const countLanguage = async (
 }> => {
   const languageMap: any = {};
   const repoInfos: any[] = [];
-  let page = [1];
+  let page = [];
   let total = Math.ceil(repoTotal / 100);
-  while (total > 1) {
+  while (total > 0) {
     page.push(total);
     total--;
   }
@@ -111,6 +111,33 @@ const topThreeRepoByStar = (respos: RepoProps[]) => {
     .splice(0, 3);
 };
 
+const newStar = async (login: string, octokit: Octokit) => {
+  const { data } = await octokit.request("GET /users/{username}/starred", {
+    username: login,
+  });
+  return data;
+};
+
+const newFollow = async (login: string, octokit: Octokit, total: number) => {
+  let _pages = [];
+  let _total = Math.ceil(total / 100);
+  while (_total > 0) {
+    _pages.push(_total);
+    _total--;
+  }
+  const data = await Promise.all(
+    _pages.map(async (page) => {
+      // return await octokit.request("GET /users/{username}/following", {
+      return await octokit.request("GET /user/following", {
+        username: login,
+        per_page: 100,
+        page: page,
+      });
+    })
+  );
+  return data.map((item) => item.data)[0];
+};
+
 const _ = {
   req,
   isPlainObj,
@@ -118,6 +145,8 @@ const _ = {
   countLanguage,
   formatDate,
   topThreeRepoByStar,
+  newStar,
+  newFollow,
 };
 
 export default _;
