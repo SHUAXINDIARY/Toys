@@ -13,7 +13,7 @@ const DetailCard: FC<IDetailCard> = ({ title, children }) => {
                 </span>
                 <span className="bg-[#545454] w- h-[2px] inline-block w-2/4" />
             </div>
-            <div className=" indent-1">{children}</div>
+            <div className="indent-6">{children}</div>
         </div>
     );
 };

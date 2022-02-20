@@ -37,7 +37,9 @@ export type UserInfoProps = {
   name: string;
   avatar_url: string;
   followers: number;
+  followers_url: string;
   following: number;
+  following_url: string;
   blog: string;
   company: string;
   twitter_username: string;
@@ -48,8 +50,15 @@ export type UserInfoProps = {
   bio: string;
   email: string;
   location: string;
+  // join date
+  created_at: string;
+  // last update date
+  updated_at: string;
 };
 
 export type RepoProps = {
-  [key: string]: number;
+  name: string;
+  description: string;
+  stargazers_count: number;
+  html_url: string;
 };

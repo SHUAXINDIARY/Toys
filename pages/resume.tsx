@@ -15,7 +15,12 @@ import {
   Twitter,
   Website,
 } from "../public/svg";
-import { LayoutType, RepoProps, UserInfoProps } from "../types/index";
+import {
+  LanguageIcon,
+  LayoutType,
+  UserInfoProps,
+  RepoProps,
+} from "../types/index";
 import _ from "../utils";
 import { api, panelColors } from "../utils/constant";
 
@@ -31,13 +36,13 @@ const styles = {
 
 type ResumeProps = {
   userInfo?: UserInfoProps;
-  language?: RepoProps[];
-  repoNames?: string[];
+  language?: LanguageIcon[];
+  topRepo?: RepoProps[];
 };
 const Resume: NextPage<ResumeProps> & LayoutType = ({
   userInfo,
   language,
-  repoNames,
+  topRepo,
 }) => {
   const basicInfo = [
     {
@@ -77,7 +82,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
       router.replace("/loginGithub");
     }
     console.log(userInfo);
-    console.log(language);
+    console.log(topRepo);
     userInfo?.login && getContribution(userInfo?.login);
   }, []);
   return (
@@ -105,18 +110,36 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
           </MsgBar>
           <MsgBar title="Basic Info">
             <ul className="flex flex-row justify-center">
-              <li className={`${styles.count}`}>
-                <span>{userInfo?.public_repos}</span>
-                <span>Repos</span>
-              </li>
-              <li className={`${styles.count}`}>
-                <span>{userInfo?.following}</span>
-                <span>Following</span>
-              </li>
-              <li className={`${styles.count}`}>
-                <span>{userInfo?.followers}</span>
-                <span>Followers</span>
-              </li>
+              <a
+                href={`https://github.com/${userInfo?.login}?tab=repositories`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <li className={`${styles.count}`}>
+                  <span>{userInfo?.public_repos}</span>
+                  <span>Repos</span>
+                </li>
+              </a>
+              <a
+                href={`https://github.com/${userInfo?.login}?tab=following`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <li className={`${styles.count}`}>
+                  <span>{userInfo?.following}</span>
+                  <span>Following</span>
+                </li>
+              </a>
+              <a
+                href={`https://github.com/${userInfo?.login}?tab=followers`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <li className={`${styles.count}`}>
+                  <span>{userInfo?.followers}</span>
+                  <span>Followers</span>
+                </li>
+              </a>
             </ul>
           </MsgBar>
           <MsgBar title="Language">
@@ -143,7 +166,9 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
               until={until}
               values={contribution}
               weekNames={[]}
-              monthNames={[1,2,3,4,5,6,7,8,9,10,11,12].map(mon => String(mon))}
+              monthNames={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((mon) =>
+                String(mon)
+              )}
               dateFormat="YYYY-MM-DD"
               weekLabelAttributes={null}
               monthLabelAttributes={null}
@@ -155,17 +180,44 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
         <div
           className={`w-[380px] bg-white overflow-y-scroll ${styles.common}`}
         >
-          <DetailCard title="Highlights">
-            <p>最近关注的</p>
+          <DetailCard title="Time Section">
+            <div>
+              <p>
+                <span>{_.formatDate(userInfo?.created_at!)}</span> -{" "}
+                <span>Joined Github</span>
+              </p>
+              <p>
+                <span>{_.formatDate(userInfo?.updated_at!)}</span> -{" "}
+                <span>Last Commit</span>
+              </p>
+            </div>
+          </DetailCard>
+          <DetailCard title="Top.3 Repo By Star">
+            <>
+              {topRepo?.map((item) => {
+                return (
+                  <div key={item.description} className="mb-6">
+                    <a href={item.html_url} target="_blank" rel="noreferrer">
+                      <h3 className="mb-3">
+                        <span className="text-2xl font-bold">{item.name}</span>{" "}
+                        -{" "}
+                        <span className="text-sm">{item.stargazers_count}</span>
+                      </h3>
+                    </a>
+                    <p>{item.description || "None description"}</p>
+                  </div>
+                );
+              })}
+            </>
           </DetailCard>
           <DetailCard title="Get Around">
-            <p>you get around</p>
+            <p>最近star的 </p>
           </DetailCard>
           <DetailCard title="New Friends">
-            <p>最近关注的</p>
+            <p>最近关注</p>
           </DetailCard>
           <DetailCard title="New Love">
-            <p>最近关注的</p>
+            <p>最近被关注的</p>
           </DetailCard>
         </div>
       </div>
@@ -188,7 +240,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   });
   try {
     const { data: _userInfos } = await octokit.request("GET /user");
-    const { language, repoNames } = await _.countLanguage(
+    const { language, repoInfos } = await _.countLanguage(
       _userInfos.public_repos,
       _userInfos.login,
       octokit
@@ -197,7 +249,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       props: {
         userInfo: { ..._userInfos },
         language: language,
-        repoNames,
+        topRepo: _.topThreeRepoByStar(repoInfos),
       },
     };
   } catch (error) {

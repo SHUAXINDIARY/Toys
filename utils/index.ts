@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/core";
-import { IconStyle, LanguageIcon } from "../types";
+import { IconStyle, LanguageIcon, RepoProps } from "../types";
 import devicon from "devicon/devicon.json";
 
 type ReqProps = {
@@ -46,13 +46,13 @@ const countLanguage = async (
   octokit: Octokit
 ): Promise<{
   language: LanguageIcon[];
-  repoNames: string[];
+  repoInfos: RepoProps[];
 }> => {
   const languageMap: any = {};
-  const repoNames: string[] = [];
+  const repoInfos: any[] = [];
   let page = [1];
   let total = Math.ceil(repoTotal / 100);
-  while (total > 0) {
+  while (total > 1) {
     page.push(total);
     total--;
   }
@@ -69,14 +69,21 @@ const countLanguage = async (
   );
   // 聚合所有仓库的语言
   data.forEach((item) => {
-    item.data.forEach(({ language, name }) => {
-      repoNames.push(name);
-      if (language && languageMap[language]) {
-        languageMap[language]++;
-      } else if (language && !languageMap[language]) {
-        languageMap[language] = 1;
+    item.data.forEach(
+      ({ language, name, description, stargazers_count, html_url }) => {
+        repoInfos.push({
+          html_url,
+          name,
+          description,
+          stargazers_count,
+        });
+        if (language && languageMap[language]) {
+          languageMap[language]++;
+        } else if (language && !languageMap[language]) {
+          languageMap[language] = 1;
+        }
       }
-    });
+    );
   });
   return {
     language: Object.keys(languageMap).map((item) => {
@@ -86,8 +93,22 @@ const countLanguage = async (
         colored: true,
       };
     }),
-    repoNames,
+    repoInfos,
   };
+};
+
+const formatDate = (date: string) => {
+  const d = new Date(date || "");
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+};
+
+const topThreeRepoByStar = (respos: RepoProps[]) => {
+  return respos
+    .sort((a, b) => {
+      return a.stargazers_count - b.stargazers_count;
+    })
+    .reverse()
+    .splice(0, 3);
 };
 
 const _ = {
@@ -95,6 +116,8 @@ const _ = {
   isPlainObj,
   isNullObj,
   countLanguage,
+  formatDate,
+  topThreeRepoByStar,
 };
 
 export default _;
