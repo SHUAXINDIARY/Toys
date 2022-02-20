@@ -41,3 +41,13 @@ export const CardDataList: HomeCardProps[] = [
     desc: "My Github",
   },
 ];
+
+export const api = {
+  baseUrl:
+    process.env.NODE_ENV === "production"
+      ? "https://toy.shuaxinjs.cn"
+      : "http://localhost:3000",
+  getToken: "/api/getToken",
+  getContributionForServer: "https://github-contributions-api.jogruber.de/v4/",
+  getContributionForClient: "/api/contribution",
+};

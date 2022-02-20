@@ -5,6 +5,7 @@ import config from "../config";
 import { StoreCtx } from "../context";
 import BackUp from "../layouts/BackUp";
 import { LayoutType } from "../types";
+import { api } from "../utils/constant";
 import _ from "../utils/index";
 
 const LoginGithub: NextPage<{
@@ -59,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     // github 定向
     const { data } = await _.req({
-      url: "http://localhost:3000/api/getToken",
+      url: `${api.baseUrl}${api.getToken}`,
       opts: {
         method: "POST",
         body: JSON.stringify({

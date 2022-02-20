@@ -2,9 +2,8 @@ import { Octokit } from "@octokit/core";
 import "devicon";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { ReactElement, useContext, useEffect } from "react";
-import GitHubCalendar from "react-github-calendar";
-// import Calendar from "react-github-contribution-calendar";
+import { ReactElement, useContext, useEffect, useState } from "react";
+import Calendar from "react-github-contribution-calendar";
 import { DetailCard, MsgBar, UserInfo } from "../components/index";
 import { StoreCtx } from "../context";
 import BackUp from "../layouts/BackUp";
@@ -18,15 +17,9 @@ import {
 } from "../public/svg";
 import { LayoutType, RepoProps, UserInfoProps } from "../types/index";
 import _ from "../utils";
-import { panelColors } from "../utils/constant";
-const values = {
-  "2022-01-23": 1,
-  "2022-01-26": 2,
-  "2022-01-27": 3,
-  "2022-01-28": 4,
-  "2022-01-29": 4,
-};
-const until = "2022-01-30";
+import { api, panelColors } from "../utils/constant";
+
+const until = "2022-02-20";
 
 // 一些通用 css
 const styles = {
@@ -66,13 +59,26 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
   ];
   const { token } = useContext(StoreCtx);
   const router = useRouter();
+  const [contribution, setContribution] = useState({});
+  const getContribution = async (login: string) => {
+    const _contributions = await _.req({
+      url: api.getContributionForClient,
+      opts: {
+        method: "POST",
+        body: JSON.stringify({
+          login,
+        }),
+      },
+    });
+    _contributions && setContribution(_contributions.contribution);
+  };
   useEffect(() => {
     if (!token || token.length <= 0) {
       router.replace("/loginGithub");
     }
     console.log(userInfo);
     console.log(language);
-    console.log(new Set(repoNames));
+    userInfo?.login && getContribution(userInfo?.login);
   }, []);
   return (
     <div className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
@@ -133,10 +139,17 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
             </ul>
           </MsgBar>
           <MsgBar title="Contribution">
-            <GitHubCalendar
-              hideTotalCount={true}
-              username={userInfo?.login || ""}
-            ></GitHubCalendar>
+            <Calendar
+              until={until}
+              values={contribution}
+              weekNames={[]}
+              monthNames={[1,2,3,4,5,6,7,8,9,10,11,12].map(mon => String(mon))}
+              dateFormat="YYYY-MM-DD"
+              weekLabelAttributes={null}
+              monthLabelAttributes={null}
+              panelColors={panelColors}
+              panelAttributes
+            />
           </MsgBar>
         </div>
         <div

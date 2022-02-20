@@ -9,7 +9,10 @@ type ReqProps = {
 
 const req = async <Res = any>({ url, opts }: ReqProps): Promise<Res> => {
   try {
-    const _res = await fetch(url, { ...opts });
+    const _res = await fetch(url, {
+      ...opts,
+    });
+
     return await _res.json();
   } catch (error: any) {
     return error;
