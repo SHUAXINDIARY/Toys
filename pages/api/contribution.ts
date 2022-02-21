@@ -24,11 +24,11 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const { login } = JSON.parse(req.body);
-  const { contributions } = await _.req<ContributionListProps>({
+  const { contributions } = await _.req({
     url: `${api.getContributionForServer}${login}?y=last`,
   });
   const contribution: any = {};
-  contributions?.forEach((item) => {
+  contributions?.forEach((item: ContributionProps) => {
     contribution[item.date] = item.count;
   });
   res.status(200).json({ contribution });

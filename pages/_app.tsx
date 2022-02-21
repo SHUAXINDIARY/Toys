@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import { defaultStore, StoreCtx } from "../context";
 import "../styles/globals.css";
+import "../styles/iconfont.css";
 import { AppPropsWithLayout } from "../types";
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {

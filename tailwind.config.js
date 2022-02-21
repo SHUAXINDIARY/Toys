@@ -7,6 +7,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
+      fix:'Ping Fang',
       next: [
         "Menlo",
         "Monaco",

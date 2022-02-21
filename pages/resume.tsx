@@ -3,22 +3,13 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { ReactElement, useContext, useEffect, useState } from "react";
 import Calendar from "react-github-contribution-calendar";
-import { DetailCard, MsgBar, UserInfo } from "../components/index";
+import { DetailCard, MsgBar, UserInfo, ToolTip } from "../components/index";
 import { StoreCtx } from "../context";
 import BackUp from "../layouts/BackUp";
-import {
-  Company,
-  Email,
-  Github,
-  Location,
-  Twitter,
-  Website
-} from "../public/svg";
-import {
-  LayoutType, ResumeProps
-} from "../types/index";
+import { Email, Github, Location, Twitter, Website } from "../public/svg";
+import { FollowProps, LayoutType, RepoProps, ResumeProps } from "../types/index";
 import _ from "../utils";
-import { api, panelColors } from "../utils/constant";
+import { api, basicInfo, LevelColors, panelColors } from "../utils/constant";
 
 const until = "2022-02-20";
 
@@ -26,8 +17,8 @@ const until = "2022-02-20";
 const styles = {
   listHover: "hover:scale-[1.5] text-center transition-all duration-150",
   count: "flex flex-col text-center mr-2",
-  common:
-    "mt-[10px] rounded-xl h-[830px] transition-all duration-300 hover:shadow-2xl hover:scale-[1.06]",
+  common: "rounded-xl h-[830px] hover:shadow-2xl hover:scale-[1.06]",
+  trans: "transition-all duration-300",
 };
 
 const Resume: NextPage<ResumeProps> & LayoutType = ({
@@ -38,25 +29,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
   followList,
   token,
 }) => {
-  const basicInfo = [
-    {
-      icon: Email,
-      link: userInfo?.email,
-    },
-    {
-      icon: Website,
-      link: userInfo?.blog,
-    },
-    {
-      icon: Twitter,
-      link: `https://twitter.com/search?q=${userInfo?.twitter_username}&src=typed_query&f=user`,
-    },
-    {
-      icon: Github,
-      link: userInfo?.html_url,
-    },
-  ];
-  const router = useRouter();
+  const _basicInfo = basicInfo(userInfo!);
   const [contribution, setContribution] = useState({});
   const getContribution = async (login: string) => {
     const _contributions = await _.req({
@@ -71,32 +44,52 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
     _contributions && setContribution(_contributions.contribution);
   };
   useEffect(() => {
-    if (!token || token.length <= 0) {
-      router.replace("/loginGithub");
-    }
-    console.log(followList);
     userInfo?.login && getContribution(userInfo?.login);
   }, []);
+  const handleGenImg = () => {
+    _.dowImg(document.querySelector("#image")!);
+  };
+  const handleCopyImg = () => {
+    _.copy(document.querySelector("#image")!);
+  };
   return (
-    <div className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500">
-      <div className="w-[700px] max-h-[850px] flex flex-row m-auto">
+    <div
+      className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500"
+      id="image"
+    >
+      <div className="w-[700px] max-h-[850px] flex flex-row m-auto items-center">
+        <div className={`cursor-pointer flex flex-col justify-around`}>
+          <p
+            className={`${styles.trans} p-[10px] text-center rounded-xl hover:bg-[#80808091] !text-white hover:scale-150 mb-2`}
+            onClick={handleGenImg}
+          >
+            <i className="iconfont icon-xiazai !text-2xl inline-block"></i>
+          </p>
+          <p
+            className={`${styles.trans} p-[10px] text-center rounded-xl hover:bg-[#80808091] !text-white hover:scale-150`}
+            onClick={handleCopyImg}
+          >
+            <i className="iconfont icon-fuzhi !text-2xl inline-block"></i>
+          </p>
+        </div>
         <div
-          className={`w-[320px] ml-[14px] mr-[20px] bg-[#8080806b] hover:bg-[#80808091] ${styles.common}`}
+          className={`p-5 ml-[14px] mr-[20px] bg-[#8080806b] hover:bg-[#80808091] ${styles.common} ${styles.trans}`}
         >
           <UserInfo
-            name={userInfo?.name || ""}
-            nickName={userInfo?.login || ""}
+            name={userInfo?.login || ""}
+            company={userInfo?.company || ""}
             avatar={userInfo?.avatar_url || ""}
           />
-          <div className="mb-3 flex w-[260px] m-auto">
-            {basicInfo.map(({ icon, link }, i) => {
-              return <MsgBar key={link || "" + i} icon={icon} link={link} />;
+          <div className="mb-3 flex w-[260px] m-auto justify-between">
+            {_basicInfo.map(({ icon, link, hover, callBack }, i) => {
+              return (
+                <ToolTip key={link || "" + i} text={hover}>
+                  <MsgBar icon={icon} link={link} callBack={callBack} />
+                </ToolTip>
+              );
             })}
           </div>
-          <MsgBar icon={Location} text={userInfo?.location} />
-          {userInfo?.company && (
-            <MsgBar icon={Company} text={userInfo?.company} />
-          )}
+          <MsgBar icon={Location} text={userInfo?.location || "Earth"} />
           <MsgBar title="Introduction">
             <p className="indent-3">{userInfo?.bio}</p>
           </MsgBar>
@@ -170,7 +163,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
           </MsgBar>
         </div>
         <div
-          className={`w-[380px] bg-white overflow-y-scroll ${styles.common}`}
+          className={`bg-white overflow-y-scroll ${styles.common} ${styles.trans}`}
         >
           <DetailCard title="Time Section">
             <div>
@@ -188,18 +181,18 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
               </p>
             </div>
           </DetailCard>
-          <DetailCard title="Top.3 Repo By Star">
+          <DetailCard title="Top.3 Repo">
             <>
-              {topRepo?.map((item) => {
+              {topRepo?.map((item, index) => {
                 return (
                   <div key={item.description} className="mb-6">
+                    <p className={`font-[800] text-4xl ${LevelColors[index+1]}`}>
+                      {item.stargazers_count}
+                    </p>
                     <p className="text-[#1f2937] text-base">
                       <a href={item.html_url} target="_blank" rel="noreferrer">
                         {item.name}
                       </a>
-                    </p>
-                    <p className="font-[800] text-4xl">
-                      {item.stargazers_count}
                     </p>
                   </div>
                 );
@@ -223,10 +216,13 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
             </>
           </DetailCard>
           <DetailCard title="New Follow">
-            <div className="flex justify-around flex-wrap w-[300px]">
+            <div className="flex justify-around flex-wrap w-full">
               {followList?.map((item) => {
                 return (
-                  <div key={item.avatar_url} className="flex flex-col items-center">
+                  <div
+                    key={item.avatar_url}
+                    className="flex flex-col items-center"
+                  >
                     <a href={item.html_url} target="_blank" rel="noreferrer">
                       <img
                         src={item.avatar_url}
@@ -234,7 +230,13 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                         className=" w-14 h-14 rounded-[50%] m-auto"
                       />
                     </a>
-                    <p className="indent-0">{item.name}</p>
+                    <ToolTip text={item.name as string}>
+                      <p className="indent-0">
+                        {item?.name?.length! > 10
+                          ? `${item.name?.substring(0, 5)}..`
+                          : item.name}
+                      </p>
+                    </ToolTip>
                   </div>
                 );
               })}
@@ -248,9 +250,26 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
 
 const _Resume = () => {
   const { token, resumeData } = useContext(StoreCtx);
-  console.log(token);
-  console.log(resumeData);
-  return <Resume {...resumeData} token={token} />;
+  const router = useRouter();
+  useEffect(() => {
+    if (!_.isDev()) {
+      if (!token || token.length <= 0) {
+        router.replace("/loginGithub");
+      }
+    }
+  }, []);
+  if (_.isDev()) {
+    const topRepo: RepoProps[] = [
+      {
+        name: "test",
+        description: "test",
+        html_url: "",
+        stargazers_count: 100
+      }
+    ]
+    return <Resume {...resumeData} topRepo={topRepo} token={token} />;
+  }
+  return token && <Resume {...resumeData} token={token} />;
 };
 
 export default _Resume;
@@ -259,4 +278,3 @@ export default _Resume;
 _Resume.getLayout = (page: ReactElement) => {
   return <BackUp>{page}</BackUp>;
 };
-

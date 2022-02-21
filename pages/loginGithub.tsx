@@ -47,7 +47,7 @@ const LoginGithub: NextPage<{
   }, []);
   return (
     <div className="h-screen bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 flex justify-center items-center">
-      <div className="w-2/6 border mockup-window border-base-300">
+      <div className="w-2/6 min-w-[300px] border mockup-window border-base-300">
         <div className="flex justify-center px-4 py-16 border-t border-base-300">
           <div className="text-center w-full">
             {loading ? (

@@ -19,19 +19,16 @@ export default async function handler(
       _userInfos.login,
       octokit
     );
-    const starList = await _.newStar(_userInfos.login, octokit);
-    // const followList = await _.newFollow(
-    //   _userInfos.login,
-    //   octokit,
-    //   _userInfos.following
-    // );
-    const followList = await _.newFollowOrder(_userInfos.login)
+    const allData = await Promise.all([
+      _.newStar(_userInfos.login, octokit),
+      _.newFollowOrder(_userInfos.login),
+    ]);
     res.status(200).send({
       userInfo: { ..._userInfos },
       language: language,
       topRepo: _.topThreeRepoByStar(repoInfos),
-      starList: starList.splice(0, 3),
-      followList: followList.splice(0, 6),
+      starList: allData[0].splice(0, 3),
+      followList: allData[1].splice(0, 6),
     });
   } catch (error) {
     console.log(error);
