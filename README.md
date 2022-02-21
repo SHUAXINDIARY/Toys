@@ -10,7 +10,7 @@
 
 # TODO
 ### Github Resume 
-- [ ] add loading animate
+- [x] add loading animate
 - [ ] move request logic to client
 - [ ] save config data to db
 - [ ] add download button

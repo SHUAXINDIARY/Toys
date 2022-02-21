@@ -1,6 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { ReactElement, useContext, useEffect } from "react";
+import { ReactElement, useContext, useEffect, useState } from "react";
+import Loading from "react-loading";
 import config from "../config";
 import { StoreCtx } from "../context";
 import BackUp from "../layouts/BackUp";
@@ -14,9 +15,17 @@ const LoginGithub: NextPage<{
   LayoutType = ({ data }) => {
   const router = useRouter();
   const store = useContext(StoreCtx);
-  useEffect(() => {
+  const [loading, setLoading] = useState(false);
+  const handleLogin = async () => {
+    setLoading(true);
+    const data = await _.req({
+      url: `https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}`,
+    });
     console.log(data);
+  };
+  useEffect(() => {
     if (data && data.access_token) {
+      setLoading(true);
       store.token = data.access_token;
       router.push({
         pathname: "/resume",
@@ -33,12 +42,25 @@ const LoginGithub: NextPage<{
       <div className="w-2/6 border mockup-window border-base-300">
         <div className="flex justify-center px-4 py-16 border-t border-base-300">
           <div className="text-center w-full">
-            <h1 className="text-4xl text-white mb-7">Github Resume</h1>
-            <a
-              href={`https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}`}
-            >
-              <div className="btn btn-primary">Login IN</div>
-            </a>
+            {loading ? (
+              <div className="w-full h-full flex justify-center items-center">
+                <Loading type="spinningBubbles" />
+              </div>
+            ) : (
+              <>
+                <h1 className="text-4xl text-white mb-7">Github Resume</h1>
+                <a
+                  href={`https://github.com/login/oauth/authorize?client_id=${config.client_id}&scope=${config.scope}`}
+                >
+                  <div
+                    className="btn btn-primary"
+                    onClick={() => setLoading(true)}
+                  >
+                    Login IN
+                  </div>
+                </a>
+              </>
+            )}
           </div>
         </div>
       </div>

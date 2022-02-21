@@ -9,7 +9,7 @@ type BackUpProps = {
 const BackBtn = () => {
   return (
     <Link href="/" passHref>
-      <button className="btn btn-primary">BACKUP</button>
+      <button className="btn btn-primary">BACKHOME</button>
     </Link>
   );
 };
