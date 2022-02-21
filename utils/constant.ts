@@ -1,4 +1,4 @@
-import { HomeCardProps, IconStyle, LanguageIcon } from "../types/index";
+import { HomeCardProps } from "../types/index";
 
 export const panelColors: string[] = [
   // "#fdf4ff",
@@ -50,4 +50,5 @@ export const api = {
   getToken: "/api/getToken",
   getContributionForServer: "https://github-contributions-api.jogruber.de/v4/",
   getContributionForClient: "/api/contribution",
+  getResumeData: "/api/getResumeData",
 };

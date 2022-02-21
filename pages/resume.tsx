@@ -1,7 +1,5 @@
-import { Octokit } from "@octokit/core";
 import "devicon";
-import { GetServerSideProps, NextPage } from "next";
-import Image from "next/image";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { ReactElement, useContext, useEffect, useState } from "react";
 import Calendar from "react-github-contribution-calendar";
@@ -14,13 +12,13 @@ import {
   Github,
   Location,
   Twitter,
-  Website,
+  Website
 } from "../public/svg";
 import {
   LanguageIcon,
   LayoutType,
-  UserInfoProps,
   RepoProps,
+  UserInfoProps
 } from "../types/index";
 import _ from "../utils";
 import { api, panelColors } from "../utils/constant";
@@ -41,6 +39,7 @@ type ResumeProps = {
   topRepo?: RepoProps[];
   starList?: any[];
   followList?: any[];
+  token: string;
 };
 const Resume: NextPage<ResumeProps> & LayoutType = ({
   userInfo,
@@ -48,6 +47,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
   topRepo,
   starList,
   followList,
+  token,
 }) => {
   const basicInfo = [
     {
@@ -67,7 +67,6 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
       link: userInfo?.html_url,
     },
   ];
-  const { token } = useContext(StoreCtx);
   const router = useRouter();
   const [contribution, setContribution] = useState({});
   const getContribution = async (login: string) => {
@@ -89,6 +88,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
     console.log(userInfo);
     console.log(topRepo);
     console.log(followList);
+    console.log(language);
     userInfo?.login && getContribution(userInfo?.login);
   }, []);
   return (
@@ -150,7 +150,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
           </MsgBar>
           <MsgBar title="Language">
             <ul className="indent-4 text-2xl flex flex-wrap">
-              {language!.map((item) => {
+              {language?.map((item) => {
                 const iconUrl = item.colored
                   ? `devicon-${item.language}-${item.style} ${
                       item.colored ? "colored" : ""
@@ -260,48 +260,17 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
   );
 };
 
-export default Resume;
+const _Resume = () => {
+  const { token, resumeData } = useContext(StoreCtx);
+  console.log(token);
+  console.log(resumeData);
+  return <Resume {...resumeData} token={token} />;
+};
+
+export default _Resume;
 
 // 布局组件
 Resume.getLayout = (page: ReactElement) => {
   return <BackUp>{page}</BackUp>;
 };
 
-// 构建客户端数据结构
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const octokit = new Octokit({
-    auth: query.token,
-    baseUrl: "https://api.github.com",
-  });
-  try {
-    const { data: _userInfos } = await octokit.request("GET /user");
-    const { language, repoInfos } = await _.countLanguage(
-      _userInfos.public_repos,
-      _userInfos.login,
-      octokit
-    );
-    const starList = await _.newStar(_userInfos.login, octokit);
-    const followList = await _.newFollow(
-      _userInfos.login,
-      octokit,
-      _userInfos.following
-    );
-    return {
-      props: {
-        userInfo: { ..._userInfos },
-        language: language,
-        topRepo: _.topThreeRepoByStar(repoInfos),
-        starList: starList.splice(0, 3),
-        followList: followList.splice(0, 6),
-      },
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      redirect: {
-        destination: "/loginGithub",
-        permanent: false,
-      },
-    };
-  }
-};

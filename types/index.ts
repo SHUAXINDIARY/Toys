@@ -33,32 +33,40 @@ export type HomeCardProps = {
 };
 
 export type UserInfoProps = {
-  login: string;
-  name: string;
-  avatar_url: string;
-  followers: number;
-  followers_url: string;
-  following: number;
-  following_url: string;
-  blog: string;
-  company: string;
-  twitter_username: string;
-  public_repos: number;
+  login?: string;
+  name?: string;
+  avatar_url?: string;
+  followers?: number;
+  followers_url?: string;
+  following?: number;
+  following_url?: string;
+  blog?: string;
+  company?: string;
+  twitter_username?: string;
+  public_repos?: number;
   // github url
-  html_url: string;
+  html_url?: string;
   // 签名
-  bio: string;
-  email: string;
-  location: string;
+  bio?: string;
+  email?: string;
+  location?: string;
   // join date
-  created_at: string;
+  created_at?: string;
   // last update date
-  updated_at: string;
+  updated_at?: string;
 };
 
 export type RepoProps = {
-  name: string;
-  description: string;
-  stargazers_count: number;
-  html_url: string;
+  name?: string;
+  description?: string;
+  stargazers_count?: number;
+  html_url?: string;
+};
+
+export type ResumeProps = {
+  userInfo?: UserInfoProps;
+  language?: LanguageIcon[];
+  topRepo?: RepoProps[];
+  starList?: any[];
+  followList?: any[];
 };
