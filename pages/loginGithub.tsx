@@ -29,6 +29,7 @@ const LoginGithub: NextPage<{
     if (data.code) {
       setLoading(false);
       alert("登陆失败，请重试");
+      return;
     }
     store.resumeData = {
       ...data,

@@ -1,19 +1,27 @@
 import { Octokit } from "@octokit/core";
+import cheerio from "cheerio";
 import devicon from "devicon/devicon.json";
-import { IconStyle, LanguageIcon, RepoProps } from "../types";
+import { FollowProps, IconStyle, LanguageIcon, RepoProps } from "../types";
 
 type ReqProps = {
   url: string;
   opts?: RequestInit;
+  isJson?: boolean;
 };
 
-const req = async <Res = any>({ url, opts }: ReqProps): Promise<Res> => {
+const req = async <Res = any>({
+  url,
+  opts,
+  isJson = true,
+}: ReqProps): Promise<Res | ResponseInit> => {
   try {
     const _res = await fetch(url, {
       ...opts,
     });
-
-    return await _res.json();
+    if (isJson) {
+      return await _res.json();
+    }
+    return _res;
   } catch (error: any) {
     return error;
   }
@@ -119,6 +127,7 @@ const newStar = async (login: string, octokit: Octokit) => {
   return data;
 };
 
+// 返回关注列表 -> 用户id大小排序过的
 const newFollow = async (login: string, octokit: Octokit, total: number) => {
   let _pages = [];
   let _total = Math.ceil(total / 100);
@@ -138,6 +147,30 @@ const newFollow = async (login: string, octokit: Octokit, total: number) => {
   return data.map((item) => item.data)[0];
 };
 
+const newFollowOrder = async (login: string) => {
+  const _data: FollowProps[] = [];
+  const res = await _.req({
+    url: `https://github.com/${login}?tab=following`,
+    isJson: false,
+  });
+  const $ = cheerio.load(await res.text());
+  $(".position-relative .d-table").each((index, dom) => {
+    if (index < 3) {
+      const avatar_url = $(dom).find("img").attr("src") || "";
+      const name = $($(dom)?.find("a")[0]).attr("href");
+      const html_url = `https://github.com/${name}`;
+      _data.push({
+        html_url,
+        avatar_url,
+        name: name?.split("/")[1],
+      });
+    } else {
+      return false;
+    }
+  });
+  return _data;
+};
+
 const _ = {
   req,
   isPlainObj,
@@ -147,6 +180,7 @@ const _ = {
   topThreeRepoByStar,
   newStar,
   newFollow,
+  newFollowOrder,
 };
 
 export default _;

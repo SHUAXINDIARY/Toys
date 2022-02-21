@@ -20,11 +20,12 @@ export default async function handler(
       octokit
     );
     const starList = await _.newStar(_userInfos.login, octokit);
-    const followList = await _.newFollow(
-      _userInfos.login,
-      octokit,
-      _userInfos.following
-    );
+    // const followList = await _.newFollow(
+    //   _userInfos.login,
+    //   octokit,
+    //   _userInfos.following
+    // );
+    const followList = await _.newFollowOrder(_userInfos.login)
     res.status(200).send({
       userInfo: { ..._userInfos },
       language: language,

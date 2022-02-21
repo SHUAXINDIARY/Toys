@@ -63,10 +63,18 @@ export type RepoProps = {
   html_url?: string;
 };
 
+export type FollowProps = {
+  avatar_url: string;
+  // github homepage url
+  html_url: string;
+  name?: string;
+};
+
 export type ResumeProps = {
   userInfo?: UserInfoProps;
   language?: LanguageIcon[];
   topRepo?: RepoProps[];
   starList?: any[];
-  followList?: any[];
+  followList?: FollowProps[];
+  token?: string;
 };

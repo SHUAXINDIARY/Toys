@@ -15,10 +15,7 @@ import {
   Website
 } from "../public/svg";
 import {
-  LanguageIcon,
-  LayoutType,
-  RepoProps,
-  UserInfoProps
+  LayoutType, ResumeProps
 } from "../types/index";
 import _ from "../utils";
 import { api, panelColors } from "../utils/constant";
@@ -33,14 +30,6 @@ const styles = {
     "mt-[10px] rounded-xl h-[830px] transition-all duration-300 hover:shadow-2xl hover:scale-[1.06]",
 };
 
-type ResumeProps = {
-  userInfo?: UserInfoProps;
-  language?: LanguageIcon[];
-  topRepo?: RepoProps[];
-  starList?: any[];
-  followList?: any[];
-  token: string;
-};
 const Resume: NextPage<ResumeProps> & LayoutType = ({
   userInfo,
   language,
@@ -85,10 +74,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
     if (!token || token.length <= 0) {
       router.replace("/loginGithub");
     }
-    console.log(userInfo);
-    console.log(topRepo);
     console.log(followList);
-    console.log(language);
     userInfo?.login && getContribution(userInfo?.login);
   }, []);
   return (
@@ -237,10 +223,10 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
             </>
           </DetailCard>
           <DetailCard title="New Follow">
-            <div className="flex justify-around flex-wrap w-[300px] mt-[-10px]">
+            <div className="flex justify-around flex-wrap w-[300px]">
               {followList?.map((item) => {
                 return (
-                  <div key={item.avatar_url} className=" ml-5 mb-3">
+                  <div key={item.avatar_url} className="flex flex-col items-center">
                     <a href={item.html_url} target="_blank" rel="noreferrer">
                       <img
                         src={item.avatar_url}
@@ -248,7 +234,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                         className=" w-14 h-14 rounded-[50%] m-auto"
                       />
                     </a>
-                    {/* <p className="w-full text-center">{item.login}</p> */}
+                    <p className="indent-0">{item.name}</p>
                   </div>
                 );
               })}
