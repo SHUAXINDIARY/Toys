@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/core";
-import { IconStyle, LanguageIcon, RepoProps } from "../types";
 import devicon from "devicon/devicon.json";
+import { IconStyle, LanguageIcon, RepoProps } from "../types";
 
 type ReqProps = {
   url: string;
@@ -103,9 +103,10 @@ const formatDate = (date: string) => {
 };
 
 const topThreeRepoByStar = (respos: RepoProps[]) => {
+  if (respos.length === 0) return [];
   return respos
     .sort((a, b) => {
-      return a.stargazers_count - b.stargazers_count;
+      return a.stargazers_count! - b.stargazers_count!;
     })
     .reverse()
     .splice(0, 3);
@@ -127,7 +128,6 @@ const newFollow = async (login: string, octokit: Octokit, total: number) => {
   }
   const data = await Promise.all(
     _pages.map(async (page) => {
-      // return await octokit.request("GET /users/{username}/following", {
       return await octokit.request("GET /user/following", {
         username: login,
         per_page: 100,

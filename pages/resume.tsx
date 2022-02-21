@@ -270,7 +270,7 @@ const _Resume = () => {
 export default _Resume;
 
 // 布局组件
-Resume.getLayout = (page: ReactElement) => {
+_Resume.getLayout = (page: ReactElement) => {
   return <BackUp>{page}</BackUp>;
 };
 

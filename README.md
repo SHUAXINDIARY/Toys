@@ -15,4 +15,5 @@
 - [x] move request logic to client
 - [ ] save config data to db
 - [ ] add download button
+- [ ] dark mode
 - [ ] ...

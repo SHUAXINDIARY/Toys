@@ -26,10 +26,14 @@ const LoginGithub: NextPage<{
         }),
       },
     });
+    if (data.code) {
+      setLoading(false);
+      alert("登陆失败，请重试");
+    }
     store.resumeData = {
       ...data,
     };
-    router.push("/resume");
+    router.replace("/resume");
   };
   useEffect(() => {
     if (data && data.access_token) {
@@ -46,7 +50,7 @@ const LoginGithub: NextPage<{
         <div className="flex justify-center px-4 py-16 border-t border-base-300">
           <div className="text-center w-full">
             {loading ? (
-              <div className="w-full h-[full] flex justify-center items-center">
+              <div className="w-full h-[116px] flex justify-center items-center">
                 <Loading type="spinningBubbles" />
               </div>
             ) : (
