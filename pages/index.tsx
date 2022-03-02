@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { HomeCardProps } from "../types";
@@ -42,7 +41,9 @@ const Home: NextPage = () => {
       </Head>
       <main className="min-h-screen py-16 px-0 flex-1 flex flex-col justify-center items-center">
         <h1 className="text-center m-0 text-6xl">
-          Welcome to <span className="text-blue-500">My Toys Space!</span>
+          Welcome to <span className="text-blue-500">
+            <a href="https://github.com/SHUAXINDIARY/Toys" target="_blank" rel="noreferrer" className="hover:underline">My Toys Space!</a>
+          </span>
         </h1>
         <div className="text-center my-16 mx-0 text-2xl">
           <code className="bg-[#fafafa] rounded-[5px] p-3 text-xl font-next">
