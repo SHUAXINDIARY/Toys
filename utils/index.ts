@@ -216,7 +216,7 @@ const dowImg = async (dom: any) => {
 };
 
 const splitShow = (str: string, len?: number) => {
-    return str.length > 10 ? str.substring(0, len || 10) : str;
+    return str.length > 10 ? `${str.substring(0, len || 10) }...` : str;
 };
 
 const _ = {
