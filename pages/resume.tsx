@@ -221,9 +221,11 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                                             target="_blank"
                                             rel="noreferrer">
                                             <h3 className="mb-3">
-                                                <span className="text-xl font-bold">
-                                                    {item.name}
-                                                </span>{" "}
+                                                <ToolTip text={item.name}>
+                                                    <span className="text-xl font-bold">
+                                                        {_.splitShow(item.name)}
+                                                    </span>
+                                                </ToolTip>
                                                 -{" "}
                                                 <span className="text-sm">
                                                     {item.stargazers_count}
@@ -254,12 +256,10 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                                         </a>
                                         <ToolTip text={item.name as string}>
                                             <p className="indent-0">
-                                                {item?.name?.length! > 10
-                                                    ? `${item.name?.substring(
-                                                          0,
-                                                          5
-                                                      )}..`
-                                                    : item.name}
+                                                {_.splitShow(
+                                                    item.name as string,
+                                                    5
+                                                )}
                                             </p>
                                         </ToolTip>
                                     </div>

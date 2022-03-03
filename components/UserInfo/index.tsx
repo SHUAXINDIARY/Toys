@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { ToolTip } from "..";
+import _ from "../../utils";
 
 type IUserInfo = {
   avatar: string;
@@ -17,7 +18,7 @@ const UserInfo: FC<IUserInfo> = ({ avatar, name, company }) => {
       <div className="flex flex-col justify-center w-full">
         <ToolTip text={name}>
           <p className="text-white text-xl w-full">
-            {name.length > 10 ? name.substring(0,10) + "..." : name}
+            {_.splitShow(name)}
           </p>
         </ToolTip>
         <p className=" text-xl text-[#CECACA]">{company}</p>

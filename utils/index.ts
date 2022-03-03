@@ -215,6 +215,10 @@ const dowImg = async (dom: any) => {
     document.body.removeChild(dlLink);
 };
 
+const splitShow = (str: string, len?: number) => {
+    return str.length > 10 ? str.substring(0, len || 10) : str;
+};
+
 const _ = {
     req,
     isPlainObj,
@@ -228,6 +232,7 @@ const _ = {
     isDev,
     copy,
     dowImg,
+    splitShow,
 };
 
 export default _;
