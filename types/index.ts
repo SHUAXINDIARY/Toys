@@ -20,7 +20,7 @@ export enum IconStyle {
 }
 
 export type LanguageIcon = {
-    style?: IconStyle;
+    style?: IconStyle | string;
     language: string;
     colored?: boolean;
 };

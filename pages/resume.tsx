@@ -9,7 +9,12 @@ import BackUp from "../layouts/BackUp";
 import { Location } from "../public/svg";
 import { LayoutType, RepoProps, ResumeProps } from "../types/index";
 import _ from "../utils";
-import { api, basicInfo, LevelColors, panelColors } from "../utils/constant";
+import {
+    api,
+    basicInfo,
+    mockData,
+    panelColors,
+} from "../utils/constant";
 
 const until = "2022-02-20";
 
@@ -27,7 +32,6 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
     topRepo,
     starList,
     followList,
-    token,
 }) => {
     const _basicInfo = basicInfo(userInfo!);
     const [contribution, setContribution] = useState({});
@@ -169,31 +173,47 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                     className={`bg-white overflow-y-scroll ${styles.common} ${styles.trans}`}>
                     <DetailCard title="Time Section">
                         <div>
-                            <p>
-                                <span className="text-xl font-bold">
-                                    {_.formatDate(userInfo?.created_at!)}
-                                </span>{" "}
-                                - <span>Joined Github</span>
-                            </p>
-                            <p>
-                                <span className="text-xl font-bold">
-                                    {_.formatDate(userInfo?.updated_at!)}
-                                </span>{" "}
-                                - <span>Last Commit</span>
-                            </p>
+                            <div className="flex justify-around items-center">
+                                <div>
+                                    <span className="text-xl font-bold">
+                                        Joined Github
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        {_.formatDate(userInfo?.created_at!)}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="flex justify-around items-center">
+                                <div>
+                                    <span className="text-xl font-bold">
+                                        Last Commit
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>
+                                        {_.formatDate(userInfo?.updated_at!)}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </DetailCard>
                     <DetailCard title="Top.3 Repo">
                         <>
                             {topRepo?.map((item, index) => {
+                                const LevelColors: any = {
+                                    1: "text-fuchsia-800",
+                                    2: "text-fuchsia-600",
+                                    3: "text-fuchsia-400",
+                                };
+                                const color = LevelColors[index + 1];
                                 return (
                                     <div
                                         key={item.description}
                                         className="mb-6">
                                         <p
-                                            className={`font-[800] text-4xl ${
-                                                LevelColors[index + 1]
-                                            }`}>
+                                            className={`font-[800] text-4xl ${color}`}>
                                             {item.stargazers_count}
                                         </p>
                                         <p className="text-[#1f2937] text-base">
@@ -220,16 +240,21 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                                             href={item.html_url}
                                             target="_blank"
                                             rel="noreferrer">
-                                            <h3 className="mb-3">
-                                                <ToolTip text={item.name}>
-                                                    <span className="text-xl font-bold">
-                                                        {_.splitShow(item.name)}
+                                            <h3 className="mb-3 text-left flex justify-center items-center">
+                                                <div className="w-[136px]">
+                                                    <ToolTip text={item.name}>
+                                                        <span className="text-xl font-bold inline-block">
+                                                            {_.splitShow(
+                                                                item.name
+                                                            )}
+                                                        </span>
+                                                    </ToolTip>
+                                                </div>
+                                                <div className="w-1/2">
+                                                    <span className="text-sm">
+                                                        {item.stargazers_count}
                                                     </span>
-                                                </ToolTip>
-                                                -{" "}
-                                                <span className="text-sm">
-                                                    {item.stargazers_count}
-                                                </span>
+                                                </div>
                                             </h3>
                                         </a>
                                     </div>
@@ -284,15 +309,7 @@ const _Resume = () => {
         }
     }, []);
     if (_.isDev()) {
-        const topRepo: RepoProps[] = [
-            {
-                name: "test",
-                description: "test",
-                html_url: "",
-                stargazers_count: 100,
-            },
-        ];
-        return <Resume {...resumeData} topRepo={topRepo} token={token} />;
+        return <Resume {...mockData} token={token} />;
     }
     return token && <Resume {...resumeData} token={token} />;
 };
