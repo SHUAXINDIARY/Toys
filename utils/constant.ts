@@ -72,10 +72,11 @@ export const basicInfo = (userInfo: UserInfoProps) => {
     return [
         {
             icon: Email,
-            // link: userInfo?.email,
-            hover: "Email:" + userInfo?.email,
-            callBack: async () => {
+            // hover: "Email:" + userInfo?.email,
+            hover: `Email：${userInfo?.email}`,
+            callBack: async (e: any) => {
                 try {
+                    e.preventDefault && e.preventDefault();
                     const copyObj = await navigator.clipboard;
                     await copyObj.writeText(userInfo?.email || "");
                     alert("复制邮箱地址成功");
@@ -102,7 +103,7 @@ export const basicInfo = (userInfo: UserInfoProps) => {
     ];
 };
 
-export const mockData: ResumeProps = {
+export const mockData: any = {
     userInfo: {
         login: "SHUAXINDIARY",
         id: 32100575,
