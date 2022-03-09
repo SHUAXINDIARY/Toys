@@ -9,20 +9,15 @@ import BackUp from "../layouts/BackUp";
 import { Location } from "../public/svg";
 import { LayoutType, RepoProps, ResumeProps } from "../types/index";
 import _ from "../utils";
-import {
-    api,
-    basicInfo,
-    mockData,
-    panelColors,
-} from "../utils/constant";
+import { api, basicInfo, mockData, panelColors } from "../utils/constant";
 
 const until = "2022-02-20";
 
-// 一些通用 css
+// common css
 const styles = {
     listHover: "hover:scale-[1.5] text-center transition-all duration-150",
     count: "flex flex-col text-center mr-2",
-    common: "rounded-xl h-[830px] hover:shadow-2xl hover:scale-[1.06]",
+    common: "rounded-xl h-full hover:shadow-2xl hover:scale-[1.06] overflow-y-scroll",
     trans: "transition-all duration-300",
 };
 
@@ -58,9 +53,10 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
     };
     return (
         <div
-            className="h-screen overflow-y-scroll flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500"
+            className="h-screen flex flex-col justify-center bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500"
             id="image">
-            <div className="w-[700px] max-h-[850px] flex flex-row m-auto items-center">
+            {/* <div className="w-[700px] max-h-[700px] flex flex-row m-auto items-center"> */}
+            <div className="w-[700px] small:max-h-[700px] big:max-h-[850px] flex flex-row m-auto items-center">
                 <div className={`cursor-pointer flex flex-col justify-around`}>
                     <p
                         className={`${styles.trans} p-[10px] text-center rounded-xl hover:bg-[#80808091] !text-white hover:scale-150 mb-2`}
@@ -170,7 +166,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                     </MsgBar>
                 </div>
                 <div
-                    className={`bg-white overflow-y-scroll ${styles.common} ${styles.trans}`}>
+                    className={`bg-white ${styles.common} ${styles.trans}`}>
                     <DetailCard title="Time Section">
                         <div>
                             <div className="flex justify-around items-center">

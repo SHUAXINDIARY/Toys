@@ -9,7 +9,7 @@ type IUserInfo = {
 };
 const UserInfo: FC<IUserInfo> = ({ avatar, name, company }) => {
   return (
-    <div className=" w-[253px] flex m-auto pt-4 mb-5">
+    <div className=" w-[253px] flex m-auto mb-5">
       <img
         src={avatar as string}
         alt="avatar"
@@ -21,7 +21,7 @@ const UserInfo: FC<IUserInfo> = ({ avatar, name, company }) => {
             {_.splitShow(name)}
           </p>
         </ToolTip>
-        <p className=" text-xl text-[#CECACA]">{company}</p>
+        <p className=" text-xl text-[#CECACA] text-center">{company}</p>
       </div>
     </div>
   );
