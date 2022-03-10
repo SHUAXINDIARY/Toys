@@ -51,7 +51,7 @@ const Couplet: NextPage & LayoutType = () => {
   };
 
   return (
-    <div className=" w-screen h-screen flex justify-center items-center font-[rush]">
+    <div className="w-screen h-screen flex justify-center items-center font-[rush] dark:bg-slate-600">
       <div className="w-[700px] h-[600px] m-auto">
         <div className=" h-[100px] flex justify-center items-center">
           <div

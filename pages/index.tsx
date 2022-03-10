@@ -46,7 +46,7 @@ const Home: NextPage = () => {
           </span>
         </h1>
         <div className="text-center my-16 mx-0 text-2xl">
-          <code className="bg-[#fafafa] rounded-[5px] p-3 text-xl font-next">
+          <code className="bg-gray-50 dark:bg-slate-600 rounded-[5px] p-3 text-xl font-next">
             Just for fun
           </code>
         </div>
