@@ -15,7 +15,7 @@
 - [x] move request logic to client
 - [ ] ~~save config data to db~~
 - [x] add download button
-- [ ] dark mode
+- [x] dark mode
 - [ ] mobile layout when i finish the ui
 - [ ] message ui
 - [ ] ...

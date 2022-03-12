@@ -7,7 +7,7 @@ import { DetailCard, MsgBar, ToolTip, UserInfo } from "../components/index";
 import { StoreCtx } from "../context";
 import BackUp from "../layouts/BackUp";
 import { Location } from "../public/svg";
-import { LayoutType, RepoProps, ResumeProps } from "../types/index";
+import { LayoutType, ResumeProps } from "../types/index";
 import _ from "../utils";
 import { api, basicInfo, mockData, panelColors } from "../utils/constant";
 
@@ -166,7 +166,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                     </MsgBar>
                 </div>
                 <div
-                    className={`bg-white ${styles.common} ${styles.trans}`}>
+                    className={`bg-white ${styles.common} ${styles.trans} dark:bg-slate-600`}>
                     <DetailCard title="Time Section">
                         <div>
                             <div className="flex justify-around items-center">
@@ -212,7 +212,7 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                                             className={`font-[800] text-4xl ${color}`}>
                                             {item.stargazers_count}
                                         </p>
-                                        <p className="text-[#1f2937] text-base">
+                                        <p className="text-base">
                                             <a
                                                 href={item.html_url}
                                                 target="_blank"
