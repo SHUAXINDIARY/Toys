@@ -85,10 +85,16 @@ export type QiniuItem = {
     fsize: number;
     md5: string;
     putTime: number;
+    url: string;
 };
 
 export type QiniuData = {
+    // 所有指定目录下的照片
     data: QiniuItem[];
+    // 照片总数
     total: number;
+    // 所有目录
     dist: string[];
+    // 所有目录和对应数据的映射
+    dataMap: any;
 };

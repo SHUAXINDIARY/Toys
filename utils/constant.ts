@@ -1,6 +1,5 @@
 import { Email, Github, Twitter, Website } from "../public/svg";
-import { HomeCardProps, ResumeProps } from "../types/index";
-import { UserInfoProps } from "../types/index";
+import { HomeCardProps, UserInfoProps } from "../types/index";
 
 export const panelColors: string[] = [
     // "#fdf4ff",
@@ -37,11 +36,11 @@ export const CardDataList: HomeCardProps[] = [
         url: "https://blog.shuaxindiary.cn",
         desc: "My blog",
     },
-    // {
-    //   title: "Github",
-    //   url: "https://github.com/SHUAXINDIARY",
-    //   desc: "My Github",
-    // },
+    {
+        title: "Album",
+        url: "/album",
+        desc: "photo album",
+    },
     {
         title: "Stella",
         url: "https://stella.shuaxinjs.cn/about/",
@@ -72,18 +71,18 @@ export const basicInfo = (userInfo: UserInfoProps) => {
     return [
         {
             icon: Email,
-            // hover: "Email:" + userInfo?.email,
             hover: `Email：${userInfo?.email}`,
-            callBack: async (e: any) => {
-                try {
-                    e.preventDefault && e.preventDefault();
-                    const copyObj = await navigator.clipboard;
-                    await copyObj.writeText(userInfo?.email || "");
-                    alert("复制邮箱地址成功");
-                } catch (error) {
-                    console.log(error);
-                }
-            },
+            link: "mailto:shuaxinjs@qq.com?subject=advice",
+            // callBack: async (e: any) => {
+            //     try {
+            //         e.preventDefault && e.preventDefault();
+            //         const copyObj = await navigator.clipboard;
+            //         await copyObj.writeText(userInfo?.email || "");
+            //         alert("复制邮箱地址成功");
+            //     } catch (error) {
+            //         console.log(error);
+            //     }
+            // },
         },
         {
             icon: Website,

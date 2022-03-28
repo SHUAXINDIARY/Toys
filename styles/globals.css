@@ -3,44 +3,50 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: rush;
-  src: url("../public/ZhiMangXing-Regular.ttf");
+    font-family: rush;
+    src: url("../public/ZhiMangXing-Regular.ttf");
 }
 
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    font-family: 'Ping Fang';
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-family: "Ping Fang";
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+        monospace;
 }
 
 /*定义整个滚动条高宽及背景：高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
-  width: 0;
-  background-color: #f5f5f5;
+    width: 0;
+    background-color: #f5f5f5;
 }
 /*定义滚动条轨道：内阴影+圆角*/
 ::-webkit-scrollbar-track {
-  background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 /*定义滑块：内阴影+圆角*/
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: #555;
+    border-radius: 10px;
+    background-color: #555;
+}
+
+/* recover swiper default css */
+.swiper-button-prev,
+.swiper-button-next {
+    color: white !important;
 }

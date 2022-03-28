@@ -1,6 +1,6 @@
 import qiniu from "qiniu";
-import { QiniuData, QiniuItem } from "../types";
 import config from "../config";
+import { QiniuData, QiniuItem } from "../types";
 import _ from "./index";
 
 class Qiniu {
@@ -23,26 +23,27 @@ class Qiniu {
                 {
                     delimiter: "/",
                     // 文件访问名前缀（即空间名）
-                    prefix: dist && `${dist}/`,
+                    prefix: dist && `${dist}`,
                 },
                 (e, respBody, respInfo) => {
-                    console.log(respBody);
                     if (e) {
-                        console.log(e);
                         rej(e);
                     }
                     const { items = [], commonPrefixes } = respBody;
                     res({
-                        data: items.map((item: QiniuItem) => {
-                            return {
-                                ...item,
-                                url: `${_.isDev() ? "http" : "https"}://${
-                                    config.domain
-                                }/${item.key}`,
-                            };
-                        }),
+                        data: items.reduce((total: any[], item: QiniuItem) => {
+                            // 过滤当前目录的根路径 因为没有这张图
+                            item.key !== dist &&
+                                total.push({
+                                    ...item,
+                                    url: `${_.isDev() ? "http" : "https"}://${
+                                        config.domain
+                                    }/${item.key}`,
+                                });
+                            return total;
+                        }, []),
                         total: items.length,
-                        dist: [...commonPrefixes] || [],
+                        dist: (commonPrefixes && [...commonPrefixes]) || [],
                     });
                 }
             );

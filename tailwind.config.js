@@ -13,8 +13,9 @@ module.exports = {
         },
         fontFamily: {
             fix: "Ping Fang",
+            menu: ["Roboto Mono"],
+            title: ["Crimson Text"],
             next: [
-                "Roboto Mono",
                 "Menlo",
                 "Monaco",
                 "Lucida Console",
