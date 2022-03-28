@@ -78,13 +78,12 @@ const Resume: NextPage<ResumeProps> & LayoutType = ({
                     />
                     <div className="mb-3 flex w-[260px] m-auto justify-between">
                         {_basicInfo.map(
-                            ({ icon, link, hover, callBack }, i) => {
+                            ({ icon, link, hover }, i) => {
                                 return (
                                     <ToolTip key={link || "" + i} text={hover}>
                                         <MsgBar
                                             icon={icon}
                                             link={link}
-                                            callBack={callBack}
                                         />
                                     </ToolTip>
                                 );

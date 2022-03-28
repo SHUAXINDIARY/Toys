@@ -73,16 +73,6 @@ export const basicInfo = (userInfo: UserInfoProps) => {
             icon: Email,
             hover: `Email：${userInfo?.email}`,
             link: "mailto:shuaxinjs@qq.com?subject=advice",
-            // callBack: async (e: any) => {
-            //     try {
-            //         e.preventDefault && e.preventDefault();
-            //         const copyObj = await navigator.clipboard;
-            //         await copyObj.writeText(userInfo?.email || "");
-            //         alert("复制邮箱地址成功");
-            //     } catch (error) {
-            //         console.log(error);
-            //     }
-            // },
         },
         {
             icon: Website,
