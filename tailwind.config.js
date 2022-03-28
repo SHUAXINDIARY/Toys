@@ -14,6 +14,7 @@ module.exports = {
         fontFamily: {
             fix: "Ping Fang",
             next: [
+                "Roboto Mono",
                 "Menlo",
                 "Monaco",
                 "Lucida Console",

@@ -2,6 +2,8 @@ import { ReactElement } from "react";
 import { defaultStore, StoreCtx } from "../context";
 import "../styles/globals.css";
 import "../styles/iconfont.css";
+import "swiper/css";
+import "swiper/css/navigation";
 import { AppPropsWithLayout } from "../types";
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {

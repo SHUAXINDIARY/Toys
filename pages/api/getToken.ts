@@ -1,5 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { is } from "cheerio/lib/api/traversing";
 import type { NextApiRequest, NextApiResponse } from "next";
 import config from "../../config";
 import _ from "../../utils/index";
@@ -19,12 +17,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  // 开发环境 ？本地配置：线上环境读取
-  const _client_secret = _.isDev() ? config.client_secret : process.env.client_secret
   const _resData = await _.req<Succ>({
     url: `https://github.com/login/oauth/access_token?client_id=${
       config.client_id
-    }&client_secret=${_client_secret}&code=${JSON.parse(req.body).code}`,
+    }&client_secret=${config.client_secret}&code=${JSON.parse(req.body).code}`,
     opts: {
       headers: {
         Accept: "application/json",

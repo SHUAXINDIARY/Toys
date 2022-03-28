@@ -78,3 +78,17 @@ export type ResumeProps = {
     followList?: FollowProps[];
     token?: string;
 };
+
+export type QiniuItem = {
+    key: string;
+    hash: string;
+    fsize: number;
+    md5: string;
+    putTime: number;
+};
+
+export type QiniuData = {
+    data: QiniuItem[];
+    total: number;
+    dist: string[];
+};
