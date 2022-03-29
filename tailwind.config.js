@@ -1,6 +1,5 @@
 module.exports = {
     mode: "jit",
-    // darkMode: "class",
     content: [
         "./pages/**/*.{js,ts,jsx,tsx}",
         "./components/**/*.{js,ts,jsx,tsx}",
@@ -10,6 +9,10 @@ module.exports = {
         screens: {
             small: { raw: "(min-height: 700px)" },
             big: { raw: "(min-height: 850px)" },
+            sm: "640px",
+            md: "768px",
+            lg: "1024px",
+            xl: "1280px",
         },
         fontFamily: {
             fix: "Ping Fang",

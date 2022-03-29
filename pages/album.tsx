@@ -70,30 +70,30 @@ const PhotoModal: FC<{ src: string; closeFullModal: any }> = ({
         <div
             className="absolute w-screen h-screen flex justify-center items-center bg-[#000000c7]"
             onClick={() => closeFullModal(false)}>
-            <img src={src} alt="image" className="h-5/6" />
+            <img src={src} alt="image" className="h-5/6 object-contain" />
         </div>
     );
 };
 
-const Album: NextPage<QiniuData> = ({ dataMap, data }) => {
+const Album: NextPage<QiniuData> = ({ dataMap }) => {
     const { pathname } = useRouter();
     // 当前查看的目录
     const [photoList, setPhotoList] = useState<QiniuItem[]>([]);
     // 展示目录还是首页
     const [isOpenAlbumHome, setIsOpenAlbumHome] = useState<boolean>(true);
+    // 查看大图
+    const [isFull, setIsFull] = useState<boolean>(false);
+    // 大图
+    const [fullSrc, setFullSrc] = useState("");
     // 打开某个目录
     const handleOpenAlbum = (distName: string) => {
         console.log(dataMap[distName]);
         setIsOpenAlbumHome(false);
         setPhotoList(dataMap[distName]);
     };
-    // 查看大图
-    const [isFull, setIsFull] = useState<boolean>(false);
-    // 大图
-    const [fullSrc, setFullSrc] = useState("");
     return (
         <div className="flex flex-row h-screen w-screen">
-            <div className="w-1/5 bg-black flex flex-col justify-around text-center text-white overflow-y-hidden">
+            <div className="w-0 md:w-1/5 bg-black flex flex-col justify-around text-center text-white overflow-y-hidden">
                 <img
                     className="rounded-[50%] w-1/2 mx-auto"
                     src="https://img.shuaxindiary.cn/newavatar.jpg"
@@ -131,14 +131,14 @@ const Album: NextPage<QiniuData> = ({ dataMap, data }) => {
                     })}
                 </div>
             </div>
-            <div className="w-4/5 overflow-y-scroll">
+            <div className="w-full md:w-4/5 overflow-y-scroll">
                 {isOpenAlbumHome ? (
                     <AlbumHome
                         dataMap={dataMap}
                         handleOpenAlbum={handleOpenAlbum}
                     />
                 ) : (
-                    <div className="grid grid-cols-5 gap-6 p-5 ">
+                    <div className="grid p-5 gap-3 md:grid-cols-5 md:gap-6">
                         {photoList.map((item) => {
                             return (
                                 <div className="h-full flex justify-center items-center bg-gray-100">
@@ -176,19 +176,24 @@ export default Album;
 
 export const getServerSideProps = async () => {
     // 获取空间下的目录
-    const { dist } = await Qiniu.getData();
+    const { dist } = await Qiniu.getData({
+        formate: false,
+    });
     // 只聚合目录下的照片 根目录下的不做展示
     const allData = await Promise.all(
         dist.map((item) => {
-            return Qiniu.getData(item);
+            return Qiniu.getData({
+                dist: item,
+                formate: true,
+            });
         })
     );
     return {
         props: {
-            data: allData.reduce((total, item) => {
-                total.push(...item.data);
-                return total;
-            }, [] as QiniuItem[]),
+            // data: allData.reduce((total, item) => {
+            //     total.push(...item.data);
+            //     return total;
+            // }, [] as QiniuItem[]),
             dataMap: allData.reduce((total: any, item, i) => {
                 total[dist[i]] = item.data;
                 return total;

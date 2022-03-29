@@ -15,7 +15,7 @@ class Qiniu {
             ...config,
         });
     }
-    getData(dist?: string) {
+    getData({ dist, formate }: { dist?: string; formate?: boolean }) {
         const bm = this.getBucketManager();
         return new Promise<QiniuData>((res: any, rej: any) => {
             bm.listPrefix(
@@ -31,17 +31,19 @@ class Qiniu {
                     }
                     const { items = [], commonPrefixes } = respBody;
                     res({
-                        data: items.reduce((total: any[], item: QiniuItem) => {
-                            // 过滤当前目录的根路径 因为没有这张图
-                            item.key !== dist &&
-                                total.push({
-                                    ...item,
-                                    url: `${_.isDev() ? "http" : "https"}://${
-                                        config.domain
-                                    }/${item.key}`,
-                                });
-                            return total;
-                        }, []),
+                        data: !formate
+                            ? items
+                            : items.reduce((total: any[], item: QiniuItem) => {
+                                  // 过滤当前目录的根路径 因为没有这张图
+                                  item.key !== dist &&
+                                      total.push({
+                                          ...item,
+                                          url: `${
+                                              _.isDev() ? "http" : "https"
+                                          }://${config.domain}/${item.key}`,
+                                      });
+                                  return total;
+                              }, []),
                         total: items.length,
                         dist: (commonPrefixes && [...commonPrefixes]) || [],
                     });
