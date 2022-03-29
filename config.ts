@@ -1,3 +1,4 @@
+
 import { api } from "./utils/constant";
 import _ from "./utils/index";
 const config = {
@@ -14,7 +15,9 @@ const config = {
             ? ""
             : (process.env.SK as string),
     },
-    domain:'img.shuaxindiary.cn'
+    domain: "img.shuaxindiary.cn",
 };
 
 export default config;
+
+

@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useState } from "react";
@@ -44,7 +45,8 @@ const AlbumHome: FC<AlbumHomeProps> = ({ dataMap, handleOpenAlbum }) => {
                     <SwiperSlide
                         key={item.md5}
                         className="text-center flex flex-row justify-center items-center">
-                        <img src={item.url} alt="img" className="m-auto" />
+                        {/* <img src={item.url} alt="img" className="m-auto" /> */}
+                        <Image src={item.url} layout="fill" quality={10} />
                         <div className="text-white absolute text-7xl font-title w-full h-full z-50 bg-[#0000007d] backdrop-blur	 flex flex-row justify-center items-center">
                             <div>
                                 <p>{key?.split("/")[0]?.toUpperCase()}</p>
@@ -87,7 +89,6 @@ const Album: NextPage<QiniuData> = ({ dataMap }) => {
     const [fullSrc, setFullSrc] = useState("");
     // 打开某个目录
     const handleOpenAlbum = (distName: string) => {
-        console.log(dataMap[distName]);
         setIsOpenAlbumHome(false);
         setPhotoList(dataMap[distName]);
     };
