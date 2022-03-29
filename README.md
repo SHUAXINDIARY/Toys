@@ -5,8 +5,9 @@
 - just for fun 
 # List
 
-- [Github Resume](https://toy.shuaxinjs.cn/loginGithub) - WIP(90%)
+- [Github Resume](https://toy.shuaxinjs.cn/loginGithub) - Done
 - [Chinese Spring Couplets](https://toy.shuaxinjs.cn/couplet) - Done
+- [Photo Album](https://toy.shuaxinjs.cn/album) - Done
 
 # TODO
 ### Github Resume 
@@ -16,6 +17,5 @@
 - [ ] ~~save config data to db~~
 - [x] add download button
 - [x] dark mode
-- [ ] mobile layout when i finish the ui
-- [ ] message ui
+- [ ] mobile layout
 - [ ] ...
