@@ -8,12 +8,8 @@ const config = {
     // 开发环境 ？本地配置：读取vercel配置
     client_secret: _.isDev() ? "" : process.env.client_secret,
     qiniuyun: {
-        AK: _.isDev()
-            ? ""
-            : (process.env.AK as string),
-        SK: _.isDev()
-            ? ""
-            : (process.env.SK as string),
+        AK: _.isDev() ? "" : (process.env.AK as string),
+        SK: _.isDev() ? "" : (process.env.SK as string),
     },
     domain: "img.shuaxindiary.cn",
 };
