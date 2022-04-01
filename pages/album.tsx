@@ -2,13 +2,14 @@ import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Email, Github, Twitter } from "../public/svg";
 import { QiniuData, QiniuItem } from "../types";
-import { CardDataList } from "../utils/constant";
+import { api, CardDataList } from "../utils/constant";
 import Qiniu from "../utils/qiniu";
+import _ from "../utils/index";
 
 const Footer = [
     {
@@ -29,12 +30,33 @@ const Footer = [
 ];
 
 interface AlbumHomeProps {
-    dataMap: any;
-    handleOpenAlbum: (dist: string) => void;
+    handleOpenAlbum: (dist: QiniuItem[]) => void;
+    dist: string[];
 }
-
+const initData = async (dist: string[], updateData: any) => {
+    const allData = await Promise.all(
+        dist.map((item) =>
+            _.req({
+                url: api.getImgList,
+                opts: {
+                    method: "post",
+                    body: JSON.stringify({ dist: item }),
+                },
+            })
+        )
+    );
+    const filterData = allData.reduce((total: any, item, i) => {
+        total[dist[i]] = item.data;
+        return total;
+    }, {});
+    updateData(filterData);
+};
 // 相册列表
-const AlbumHome: FC<AlbumHomeProps> = ({ dataMap, handleOpenAlbum }) => {
+const AlbumHome: FC<AlbumHomeProps> = ({ handleOpenAlbum, dist }) => {
+    const [dataMap, setDataMap] = useState<any>({});
+    useEffect(() => {
+        initData(dist, setDataMap);
+    }, []);
     return (
         <Swiper
             navigation={true}
@@ -61,7 +83,9 @@ const AlbumHome: FC<AlbumHomeProps> = ({ dataMap, handleOpenAlbum }) => {
                                 <p>{key?.split("/")[0]?.toUpperCase()}</p>
                                 <button
                                     className="btn btn-outline text-white btn-lg"
-                                    onClick={() => handleOpenAlbum(key)}>
+                                    onClick={() => {
+                                        handleOpenAlbum(dataMap[key]);
+                                    }}>
                                     MORE
                                 </button>
                             </div>
@@ -82,7 +106,6 @@ const PhotoModal: FC<{ src: string; closeFullModal: any }> = ({
         <div
             className="absolute w-screen h-screen flex justify-center items-center bg-[#000000c7]"
             onClick={() => closeFullModal(false)}>
-            {/* <img src={src} alt="image" className="h-5/6 object-contain" /> */}
             <Image
                 src={src}
                 layout="fill"
@@ -95,7 +118,7 @@ const PhotoModal: FC<{ src: string; closeFullModal: any }> = ({
 };
 
 // 容器
-const Album: NextPage<QiniuData> = ({ dataMap }) => {
+const Album: NextPage<QiniuData> = ({ dist }) => {
     const { pathname } = useRouter();
     // 当前查看的目录
     const [photoList, setPhotoList] = useState<QiniuItem[]>([]);
@@ -106,9 +129,9 @@ const Album: NextPage<QiniuData> = ({ dataMap }) => {
     // 大图
     const [fullSrc, setFullSrc] = useState("");
     // 打开某个目录
-    const handleOpenAlbum = (distName: string) => {
+    const handleOpenAlbum = (data: QiniuItem[]) => {
         setIsOpenAlbumHome(false);
-        setPhotoList(dataMap[distName]);
+        setPhotoList(data);
     };
     return (
         <div className="flex flex-row h-screen w-screen">
@@ -157,10 +180,7 @@ const Album: NextPage<QiniuData> = ({ dataMap }) => {
             </div>
             <div className="w-full md:w-4/5 overflow-y-scroll">
                 {isOpenAlbumHome ? (
-                    <AlbumHome
-                        dataMap={dataMap}
-                        handleOpenAlbum={handleOpenAlbum}
-                    />
+                    <AlbumHome dist={dist} handleOpenAlbum={handleOpenAlbum} />
                 ) : (
                     <div className="grid p-5 gap-3 md:grid-cols-5 md:gap-6">
                         {photoList.map((item) => {
@@ -168,15 +188,6 @@ const Album: NextPage<QiniuData> = ({ dataMap }) => {
                                 <div
                                     key={item.key}
                                     className="h-[200px] flex justify-center items-center bg-gray-100">
-                                    {/* <img
-                                        src={item.url}
-                                        alt="image"
-                                        className="cursor-pointer"
-                                        onClick={() => {
-                                            setIsFull(true);
-                                            setFullSrc(item.url);
-                                        }}
-                                    /> */}
                                     <Image
                                         src={item.url}
                                         alt="image"
@@ -214,24 +225,16 @@ export const getServerSideProps = async () => {
         formate: false,
     });
     // 只聚合目录下的照片 根目录下的不做展示
-    const allData = await Promise.all(
-        dist.map((item) => {
-            return Qiniu.getData({
-                dist: item,
-                formate: true,
-            });
-        })
-    );
+    // const allData = await Promise.all(
+    //     dist.map((item) => {
+    //         return Qiniu.getData({
+    //             dist: item,
+    //             formate: true,
+    //         });
+    //     })
+    // );
     return {
         props: {
-            // data: allData.reduce((total, item) => {
-            //     total.push(...item.data);
-            //     return total;
-            // }, [] as QiniuItem[]),
-            dataMap: allData.reduce((total: any, item, i) => {
-                total[dist[i]] = item.data;
-                return total;
-            }, {}),
             dist,
         },
     };

@@ -58,6 +58,7 @@ export const api = {
         "https://github-contributions-api.jogruber.de/v4/",
     getContributionForClient: "/api/contribution",
     getResumeData: "/api/getResumeData",
+    getImgList: "/api/getImgList",
 };
 
 // github部分语言和devicon的不一样

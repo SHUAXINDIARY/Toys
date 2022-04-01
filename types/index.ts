@@ -96,5 +96,5 @@ export type QiniuData = {
     // 所有目录
     dist: string[];
     // 所有目录和对应数据的映射
-    dataMap: any;
+    // dataMap: any;
 };

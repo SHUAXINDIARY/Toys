@@ -19,7 +19,7 @@ class Qiniu {
         const bm = this.getBucketManager();
         return new Promise<QiniuData>((res: any, rej: any) => {
             bm.listPrefix(
-                "shuaxindiary",
+                config.space,
                 {
                     delimiter: "/",
                     // 文件访问名前缀（即空间名）
