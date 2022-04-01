@@ -17,5 +17,5 @@
 - [ ] ~~save config data to db~~
 - [x] add download button
 - [x] dark mode
-- [ ] mobile layout
+- [x] mobile layout
 - [ ] ...
