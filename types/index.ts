@@ -29,6 +29,7 @@ export type HomeCardProps = {
     title: string;
     url: string;
     desc?: string;
+    // 打开新标签页
     openNewTag?: Boolean;
 };
 

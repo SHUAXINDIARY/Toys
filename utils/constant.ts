@@ -35,6 +35,7 @@ export const CardDataList: HomeCardProps[] = [
         title: "Blog",
         url: "https://blog.shuaxindiary.cn",
         desc: "My blog",
+        openNewTag: true,
     },
     {
         title: "Album",
@@ -45,6 +46,7 @@ export const CardDataList: HomeCardProps[] = [
         title: "Stella",
         url: "https://stella.shuaxinjs.cn/about/",
         desc: "vuepress-theme",
+        openNewTag: true,
     },
 ];
 

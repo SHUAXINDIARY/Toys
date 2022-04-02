@@ -33,6 +33,7 @@ const Footer = [
 interface AlbumHomeProps {
     handleOpenAlbum: (dist: QiniuItem[]) => void;
     dist: string[];
+    dataMap?: any;
 }
 const initData = async (dist: string[], updateData: any) => {
     const allData = await Promise.all(
@@ -53,9 +54,14 @@ const initData = async (dist: string[], updateData: any) => {
     updateData(filterData);
 };
 // 相册列表
-const AlbumHome: FC<AlbumHomeProps> = ({ handleOpenAlbum, dist }) => {
+const AlbumHome: FC<AlbumHomeProps> = ({
+    handleOpenAlbum,
+    dist,
+    dataMap: _dataMap,
+}) => {
     const [dataMap, setDataMap] = useState<any>({});
     useEffect(() => {
+        console.log(_dataMap);
         initData(dist, setDataMap);
     }, []);
     return (
@@ -63,8 +69,8 @@ const AlbumHome: FC<AlbumHomeProps> = ({ handleOpenAlbum, dist }) => {
             navigation={true}
             modules={[Navigation]}
             className="h-full bg-white">
-            {Object.keys(dataMap)?.map((key) => {
-                const item = dataMap[key][0];
+            {Object.keys(_dataMap)?.map((key) => {
+                const item = _dataMap[key][0];
                 return (
                     <SwiperSlide
                         key={item.md5}
@@ -126,7 +132,7 @@ const PhotoModal: FC<{ src: string; closeFullModal: any }> = ({
 };
 
 // 容器
-const Album: NextPage<QiniuData> = ({ dist, data }) => {
+const Album: NextPage<QiniuData> = ({ dist, dataMap }) => {
     const { pathname } = useRouter();
     // 当前查看的目录
     const [photoList, setPhotoList] = useState<QiniuItem[]>([]);
@@ -155,18 +161,32 @@ const Album: NextPage<QiniuData> = ({ dist, data }) => {
                     />
                 </div>
                 <ul className="text-[18px] font-next h-52 w-1/2 mx-auto text-left text-gray-700">
-                    {CardDataList?.map((item) => {
+                    {[
+                        {
+                            title: "Home",
+                            url: "/",
+                        },
+                        ...CardDataList,
+                    ]?.map((item) => {
                         return (
                             <li
                                 key={item.url}
                                 className={`py-1 cursor-pointer h-10 leading-10 ${
                                     item.url === pathname && "text-white"
                                 }`}>
-                                <Link href={item.url}>
-                                    <span className="hover:text-white transition-all duration-200 ">
-                                        {item.title.toUpperCase()}
-                                    </span>
-                                </Link>
+                                {item.openNewTag ? (
+                                    <a href={item.url} target="_blank">
+                                        <span className="hover:text-white transition-all duration-200 ">
+                                            {item.title.toUpperCase()}
+                                        </span>
+                                    </a>
+                                ) : (
+                                    <Link href={item.url}>
+                                        <span className="hover:text-white transition-all duration-200 ">
+                                            {item.title.toUpperCase()}
+                                        </span>
+                                    </Link>
+                                )}
                             </li>
                         );
                     })}
@@ -188,7 +208,11 @@ const Album: NextPage<QiniuData> = ({ dist, data }) => {
             </div>
             <div className="w-full md:w-4/5 overflow-y-scroll">
                 {isOpenAlbumHome ? (
-                    <AlbumHome dist={dist} handleOpenAlbum={handleOpenAlbum} />
+                    <AlbumHome
+                        dist={dist}
+                        handleOpenAlbum={handleOpenAlbum}
+                        dataMap={dataMap}
+                    />
                 ) : (
                     <div className="grid p-5 gap-3 md:grid-cols-5 md:gap-6">
                         {photoList.map((item) => {
@@ -229,8 +253,8 @@ export default Album;
 
 export const getServerSideProps = async () => {
     // 获取空间下的目录
-    const { dist } = await Qiniu.getData({
-        formate: false,
+    const { dist, data } = await Qiniu.getData({
+        formate: true,
     });
     // 只聚合目录下的照片 根目录下的不做展示
     // const allData = await Promise.all(
@@ -244,6 +268,10 @@ export const getServerSideProps = async () => {
     return {
         props: {
             dist,
+            dataMap: dist.reduce((total, item, i) => {
+                total[item] = [data[i]];
+                return total;
+            }, {} as any),
         },
     };
 };
