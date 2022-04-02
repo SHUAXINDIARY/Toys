@@ -11,7 +11,12 @@ export default async function handler(
             dist,
             formate: true,
         });
-        res.status(200).json(data);
+        res.status(200).json({
+            ...data,
+            data: data.data.sort((a, b) => {
+                return b.putTime - a.putTime;
+            }),
+        });
     } else {
         res.status(200).json({});
     }
