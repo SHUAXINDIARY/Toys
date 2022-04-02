@@ -95,6 +95,6 @@ export type QiniuData = {
     total: number;
     // 所有目录
     dist: string[];
-    // 所有目录和对应数据的映射
-    // dataMap: any;
+    // 服务端下发的所有目录和对应数据的映射
+    dataMap?: any;
 };

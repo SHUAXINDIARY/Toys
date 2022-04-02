@@ -10,6 +10,7 @@ import { QiniuData, QiniuItem } from "../types";
 import { api, CardDataList } from "../utils/constant";
 import Qiniu from "../utils/qiniu";
 import _ from "../utils/index";
+import Loading from "react-loading";
 
 const Footer = [
     {
@@ -74,8 +75,9 @@ const AlbumHome: FC<AlbumHomeProps> = ({ handleOpenAlbum, dist }) => {
                                 width="100%"
                                 height="100%"
                                 layout="responsive"
-                                quality={10}
-                                className="object-contain"
+                                quality={1}
+                                className="object-cover"
+                                loading="eager"
                             />
                         </div>
                         <div className="text-white absolute text-7xl font-title w-full h-full z-50 bg-[#0000007d] backdrop-blur	 flex flex-row justify-center items-center">
@@ -102,23 +104,29 @@ const PhotoModal: FC<{ src: string; closeFullModal: any }> = ({
     src,
     closeFullModal,
 }) => {
+    const [loading, setLoading] = useState(true);
     return (
         <div
             className="absolute w-screen h-screen flex justify-center items-center bg-[#000000c7]"
             onClick={() => closeFullModal(false)}>
+            {loading && <Loading type="spinningBubbles" />}
             <Image
                 src={src}
                 layout="fill"
-                className="object-contain"
+                className="object-contain m-auto"
                 // 优先加载
                 loading="eager"
+                onLoadingComplete={() => {
+                    console.log("ok");
+                    setLoading(false);
+                }}
             />
         </div>
     );
 };
 
 // 容器
-const Album: NextPage<QiniuData> = ({ dist }) => {
+const Album: NextPage<QiniuData> = ({ dist, data }) => {
     const { pathname } = useRouter();
     // 当前查看的目录
     const [photoList, setPhotoList] = useState<QiniuItem[]>([]);
@@ -187,14 +195,14 @@ const Album: NextPage<QiniuData> = ({ dist }) => {
                             return (
                                 <div
                                     key={item.key}
-                                    className="h-[200px] flex justify-center items-center bg-gray-100">
+                                    className="h-[200px] flex justify-center items-center bg-gray-100 dark:bg-gray-600">
                                     <Image
                                         src={item.url}
                                         alt="image"
                                         width="100%"
                                         height="100%"
                                         loading="lazy"
-                                        quality={3}
+                                        quality={5}
                                         className="cursor-pointer object-contain"
                                         onClick={() => {
                                             setIsFull(true);
