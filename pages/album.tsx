@@ -6,11 +6,11 @@ import { FC, useEffect, useState } from "react";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Email, Github, Twitter } from "../public/svg";
-import { QiniuData, QiniuItem } from "../types";
+import { AlbumHomeProps, QiniuData, QiniuItem } from "../types";
 import { api, CardDataList } from "../utils/constant";
 import Qiniu from "../utils/qiniu";
 import _ from "../utils/index";
-import Loading from "react-loading";
+import { PhotoModal } from "../components/index";
 
 const Footer = [
     {
@@ -30,11 +30,6 @@ const Footer = [
     },
 ];
 
-interface AlbumHomeProps {
-    handleOpenAlbum: (dist: QiniuItem[]) => void;
-    dist: string[];
-    dataMap?: any;
-}
 const initData = async (dist: string[], updateData: any) => {
     const allData = await Promise.all(
         dist.map((item) =>
@@ -102,32 +97,6 @@ const AlbumHome: FC<AlbumHomeProps> = ({
                 );
             })}
         </Swiper>
-    );
-};
-
-// 照片详情
-const PhotoModal: FC<{ src: string; closeFullModal: any }> = ({
-    src,
-    closeFullModal,
-}) => {
-    const [loading, setLoading] = useState(true);
-    return (
-        <div
-            className="absolute w-screen h-screen flex justify-center items-center bg-[#000000c7]"
-            onClick={() => closeFullModal(false)}>
-            {loading && <Loading type="spinningBubbles" />}
-            <Image
-                src={src}
-                layout="fill"
-                className="object-contain m-auto"
-                // 优先加载
-                loading="eager"
-                onLoadingComplete={() => {
-                    console.log("ok");
-                    setLoading(false);
-                }}
-            />
-        </div>
     );
 };
 

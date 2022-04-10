@@ -99,3 +99,9 @@ export type QiniuData = {
     // 服务端下发的所有目录和对应数据的映射
     dataMap?: any;
 };
+
+export interface AlbumHomeProps {
+    handleOpenAlbum: (dist: QiniuItem[]) => void;
+    dist: string[];
+    dataMap?: any;
+}
