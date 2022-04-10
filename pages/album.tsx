@@ -102,7 +102,7 @@ const AlbumHome: FC<AlbumHomeProps> = ({
 
 // 容器
 const Album: NextPage<QiniuData> = ({ dist, dataMap }) => {
-    const { pathname } = useRouter();
+    const { pathname, query } = useRouter();
     // 当前查看的目录
     const [photoList, setPhotoList] = useState<QiniuItem[]>([]);
     // 展示目录还是首页
@@ -118,63 +118,66 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap }) => {
     };
     return (
         <div className="flex flex-row h-screen w-screen">
-            <div className="w-0 md:w-1/5 bg-black flex flex-col justify-around text-center text-white overflow-y-hidden">
-                <div className="w-[150px] h-[150px] mx-auto">
-                    <Image
-                        src="https://img.shuaxindiary.cn/newavatar.jpg"
-                        alt="avatar"
-                        width="100%"
-                        height="100%"
-                        layout="responsive"
-                        className="rounded-[50%]"
-                    />
+            {/* iframe嵌入式配置 */}
+            {(['true', undefined] as any[]).includes(query?.showMenu) && (
+                <div className="w-0 md:w-1/5 bg-black flex flex-col justify-around text-center text-white overflow-y-hidden">
+                    <div className="w-[150px] h-[150px] mx-auto">
+                        <Image
+                            src="https://img.shuaxindiary.cn/newavatar.jpg"
+                            alt="avatar"
+                            width="100%"
+                            height="100%"
+                            layout="responsive"
+                            className="rounded-[50%]"
+                        />
+                    </div>
+                    <ul className="text-[18px] font-next h-52 w-1/2 mx-auto text-left text-gray-700">
+                        {[
+                            {
+                                title: "Home",
+                                url: "/",
+                            },
+                            ...CardDataList,
+                        ]?.map((item) => {
+                            return (
+                                <li
+                                    key={item.url}
+                                    className={`py-1 cursor-pointer h-10 leading-10 ${
+                                        item.url === pathname && "text-white"
+                                    }`}>
+                                    {item.openNewTag ? (
+                                        <a href={item.url} target="_blank">
+                                            <span className="hover:text-white transition-all duration-200 ">
+                                                {item.title.toUpperCase()}
+                                            </span>
+                                        </a>
+                                    ) : (
+                                        <Link href={item.url}>
+                                            <span className="hover:text-white transition-all duration-200 ">
+                                                {item.title.toUpperCase()}
+                                            </span>
+                                        </Link>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    <div className="flex flex-row w-1/2 mx-auto justify-around items-center">
+                        {Footer.map(({ icon, text, link }) => {
+                            return (
+                                <a href={link} target="_blank" key={text}>
+                                    <img
+                                        src={icon.src}
+                                        alt="icon"
+                                        key={text}
+                                        className="cursor-pointer hover:scale-150 transition-all duration-300"
+                                    />
+                                </a>
+                            );
+                        })}
+                    </div>
                 </div>
-                <ul className="text-[18px] font-next h-52 w-1/2 mx-auto text-left text-gray-700">
-                    {[
-                        {
-                            title: "Home",
-                            url: "/",
-                        },
-                        ...CardDataList,
-                    ]?.map((item) => {
-                        return (
-                            <li
-                                key={item.url}
-                                className={`py-1 cursor-pointer h-10 leading-10 ${
-                                    item.url === pathname && "text-white"
-                                }`}>
-                                {item.openNewTag ? (
-                                    <a href={item.url} target="_blank">
-                                        <span className="hover:text-white transition-all duration-200 ">
-                                            {item.title.toUpperCase()}
-                                        </span>
-                                    </a>
-                                ) : (
-                                    <Link href={item.url}>
-                                        <span className="hover:text-white transition-all duration-200 ">
-                                            {item.title.toUpperCase()}
-                                        </span>
-                                    </Link>
-                                )}
-                            </li>
-                        );
-                    })}
-                </ul>
-                <div className="flex flex-row w-1/2 mx-auto justify-around items-center">
-                    {Footer.map(({ icon, text, link }) => {
-                        return (
-                            <a href={link} target="_blank" key={text}>
-                                <img
-                                    src={icon.src}
-                                    alt="icon"
-                                    key={text}
-                                    className="cursor-pointer hover:scale-150 transition-all duration-300"
-                                />
-                            </a>
-                        );
-                    })}
-                </div>
-            </div>
+            )}
             <div className="w-full md:w-4/5 overflow-y-scroll">
                 {isOpenAlbumHome ? (
                     <AlbumHome
