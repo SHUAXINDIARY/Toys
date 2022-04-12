@@ -102,7 +102,7 @@ const AlbumHome: FC<AlbumHomeProps> = ({
 
 // 容器
 const Album: NextPage<QiniuData> = ({ dist, dataMap }) => {
-    const { pathname, query } = useRouter();
+    const { pathname } = useRouter();
     // 当前查看的目录
     const [photoList, setPhotoList] = useState<QiniuItem[]>([]);
     // 展示目录还是首页
@@ -185,7 +185,7 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap }) => {
                     />
                 ) : (
                     <div className="grid p-5 gap-3 md:grid-cols-5 md:gap-6">
-                        {photoList.map((item) => {
+                        {photoList?.map((item) => {
                             return (
                                 <div
                                     key={item.key}
