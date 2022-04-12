@@ -105,3 +105,5 @@ export interface AlbumHomeProps {
     dist: string[];
     dataMap?: any;
 }
+
+export type CommObj = Record<string, any>

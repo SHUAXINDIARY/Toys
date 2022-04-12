@@ -48,6 +48,12 @@ export const CardDataList: HomeCardProps[] = [
         desc: "vuepress-theme",
         openNewTag: true,
     },
+    {
+        title: "JsonEdit",
+        url: "/jsonEdit",
+        desc: "Structural diff for JSON files",
+        openNewTag: true,
+    },
 ];
 
 export const api = {
