@@ -1,10 +1,9 @@
-import { NextPage } from "next";
-import { diff, diffString } from "json-diff";
-import React, { ReactElement, useState } from "react";
+import { diff } from "json-diff";
 import { marked } from "marked";
-import { json } from "stream/consumers";
-import { CommObj, LayoutType } from "../types";
+import { NextPage } from "next";
+import React, { ReactElement, useState } from "react";
 import BackUp from "../layouts/BackUp";
+import { CommObj, LayoutType } from "../types";
 interface InputCodeProps {
     onChange: (val: string) => void;
     value: string;
@@ -46,6 +45,17 @@ const InputCode = (props: InputCodeProps) => {
     );
 };
 
+const renderVal = (val: any) => {
+    if (typeof val === "object") {
+        return (
+            <code className="whitespace-normal break-words w-full">
+                {JSON.stringify(val)}
+            </code>
+        );
+    }
+    return <code>{val}</code>;
+};
+
 const JsonEdit: NextPage<any> & LayoutType = () => {
     // json
     const [one, setOne] = useState("");
@@ -79,16 +89,19 @@ const JsonEdit: NextPage<any> & LayoutType = () => {
                                     })
                                 );
                                 console.log(
-                                    diff(_one, _two, {
-                                        keysOnly: true,
-                                    })
+                                    formatResult(
+                                        diff(_one, _two, {
+                                            raw: true,
+                                        })
+                                    )
                                 );
                                 setDiffRes(
-                                    diff(_one, _two, {
-                                        raw: true,
-                                    })
+                                    formatResult(
+                                        diff(_one, _two, {
+                                            raw: true,
+                                        })
+                                    )
                                 );
-                                console.log(formatResult(diffRes));
                             } catch (error) {
                                 console.log(error);
                                 alert("检查json格式");
@@ -114,11 +127,11 @@ const JsonEdit: NextPage<any> & LayoutType = () => {
                 </div>
             </div>
             <div className="row-span-5 col-span-1">
-                <div className="mockup-code h-full">
-                    {formatResult(diffRes).length ? (
+                <div className="mockup-code h-full w-full break-all">
+                    {diffRes.length ? (
                         <div className="p-4">
                             {"{"}
-                            {formatResult(diffRes).map((item, i) => {
+                            {diffRes.map((item: any, i: number) => {
                                 const add = item.status === "added";
                                 return (
                                     <div
@@ -131,7 +144,7 @@ const JsonEdit: NextPage<any> & LayoutType = () => {
                                         <pre data-prefix={add ? "+" : "-"}>
                                             <code>{item.key}</code>
                                             <code>:</code>
-                                            <code>{item.val}</code>
+                                            {renderVal(item.val)}
                                             <code>,</code>
                                         </pre>
                                     </div>
