@@ -1,10 +1,10 @@
-import { diff, diffString } from "json-diff";
+import { diff } from "json-diff";
 import { NextPage } from "next";
 import React, { ReactElement, useState } from "react";
-import BackUp from "../layouts/BackUp";
-import { CommObj, LayoutType } from "../types";
-import { Editor } from "../components/index";
 import { IAceOptions } from "react-ace";
+import { Editor } from "../components/index";
+import BackUp from "../layouts/BackUp";
+import { LayoutType } from "../types";
 interface InputCodeProps {
     onChange: (val: string) => void;
     value: string;
@@ -14,7 +14,7 @@ interface InputCodeProps {
 // 格式化json
 const formatCode = (str: string) => {
     try {
-        return JSON.stringify(JSON.parse(str), null, 2);
+        return JSON.stringify(JSON.parse(str), null, 4);
     } catch (error) {
         console.error(error);
         return str;
@@ -73,24 +73,12 @@ const JsonEdit: NextPage<any> & LayoutType = () => {
                         try {
                             const _one = JSON.parse(one);
                             const _two = JSON.parse(two);
-                            console.log(
-                                diffOptions.rawJson
-                                    ? diff(_one, _two, {
-                                          keysOnly: diffOptions.onlyKey,
-                                      })
-                                    : diffString(_one, _two, {
-                                          keysOnly: diffOptions.onlyKey,
-                                      })
-                            );
-                            setDiffRes(
-                                diffOptions.rawJson
-                                    ? diff(_one, _two, {
-                                          keysOnly: diffOptions.onlyKey,
-                                      })
-                                    : diffString(_one, _two, {
-                                          keysOnly: diffOptions.onlyKey,
-                                      })
-                            );
+                            const diffRes = diff(_one, _two, {
+                                keysOnly: diffOptions.onlyKey,
+                                full: true,
+                                // raw: true,
+                            });
+                            setDiffRes(diffRes);
                         } catch (error) {
                             console.log(error);
                             alert("检查json格式");
@@ -168,35 +156,13 @@ const JsonEdit: NextPage<any> & LayoutType = () => {
                         </li>
                     </ul>
                 </div>
-                {/* <div className="dropdown dropdown-right ">
+                <div className="dropdown dropdown-right ">
                     <label tabIndex={0} className="btn m-1 w-4/5 mt-5">
                         Diff Setting
                     </label>
                     <ul
                         tabIndex={0}
                         className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                            <div className="form-control">
-                                <label className="label cursor-pointer">
-                                    <span className="label-text mr-1">
-                                        Raw Json
-                                    </span>
-                                    <input
-                                        type="checkbox"
-                                        checked={diffOptions.rawJson}
-                                        className="checkbox"
-                                        onClick={() => {
-                                            setDiffOptions((val) => {
-                                                return {
-                                                    ...val,
-                                                    rawJson: !val.rawJson,
-                                                };
-                                            });
-                                        }}
-                                    />
-                                </label>
-                            </div>
-                        </li>
                         <li>
                             <div className="form-control">
                                 <label className="label cursor-pointer">
@@ -220,31 +186,31 @@ const JsonEdit: NextPage<any> & LayoutType = () => {
                             </div>
                         </li>
                     </ul>
-                </div> */}
+                </div>
             </div>
             <div className="grid grid-rows-6 grid-flow-col gap-5 h-screen w-screen p-4 relative">
                 <div className="row-span-3 col-span-1">
                     <InputCode
                         options={editorOptions}
                         value={one}
-                        onChange={setOne}
+                        onChange={(val) => {
+                            setOne(val.trim());
+                        }}
                     />
                 </div>
                 <div className="row-span-3 col-span-1 text-center">
                     <InputCode
                         options={editorOptions}
                         value={two}
-                        onChange={setTwo}
+                        onChange={(val) => {
+                            setTwo(val.trim());
+                        }}
                     />
                 </div>
                 <div className="row-span-6 col-span-1">
                     <div className="mockup-code h-full w-full break-all bg-[#1d1f21]">
                         <Editor
-                            value={
-                                diffOptions.rawJson
-                                    ? formatCode(JSON.stringify(diffRes))
-                                    : diffRes
-                            }
+                            value={formatCode(JSON.stringify(diffRes))}
                             options={editorOptions}
                         />
                     </div>

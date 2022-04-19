@@ -1,6 +1,5 @@
-import React from "react";
+import React, { FC } from "react";
 import AceEditor, { IAceEditorProps, IAceOptions } from "react-ace";
-import { FC } from "react";
 require("ace-builds/src-noconflict/mode-json");
 require("ace-builds/src-noconflict/theme-tomorrow_night");
 require("ace-builds/src-noconflict/theme-github");
