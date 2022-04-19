@@ -10,6 +10,7 @@
     "dependencies": {
         "@octokit/core": "^3.5.1",
         "@types/marked": "^4.0.3",
+        "ace-builds": "^1.4.14",
         "canvas-confetti": "^1.5.1",
         "cheerio": "^1.0.0-rc.10",
         "daisyui": "^2.0.6",
@@ -21,6 +22,7 @@
         "next": "12.0.10",
         "qiniu": "^7.4.0",
         "react": "17.0.2",
+        "react-ace": "^10.0.0",
         "react-dom": "17.0.2",
         "react-github-contribution-calendar": "^2.1.1",
         "react-loading": "^2.0.3",
