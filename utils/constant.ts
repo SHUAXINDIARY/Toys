@@ -33,7 +33,7 @@ export const CardDataList: HomeCardProps[] = [
     },
     {
         title: "Blog",
-        url: "https://blog.shuaxindiary.cn",
+        url: "https://shuaxindiary.cn",
         desc: "My blog",
         openNewTag: true,
     },
