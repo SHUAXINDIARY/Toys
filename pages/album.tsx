@@ -51,14 +51,8 @@ const initData = async (dist: string[], updateData: any) => {
 // 相册列表
 const AlbumHome: FC<AlbumHomeProps> = ({
     handleOpenAlbum,
-    dist,
     dataMap: _dataMap,
 }) => {
-    const [dataMap, setDataMap] = useState<any>({});
-    useEffect(() => {
-        console.log(_dataMap);
-        initData(dist, setDataMap);
-    }, []);
     return (
         <Swiper
             navigation={true}
@@ -87,7 +81,7 @@ const AlbumHome: FC<AlbumHomeProps> = ({
                                 <button
                                     className="btn btn-outline text-white btn-lg"
                                     onClick={() => {
-                                        handleOpenAlbum(dataMap[key]);
+                                        handleOpenAlbum(key);
                                     }}>
                                     MORE
                                 </button>
@@ -101,7 +95,7 @@ const AlbumHome: FC<AlbumHomeProps> = ({
 };
 
 // 容器
-const Album: NextPage<QiniuData> = ({ dist, dataMap }) => {
+const Album: NextPage<QiniuData> = ({ dist, dataMap, allData }) => {
     const { pathname } = useRouter();
     // 当前查看的目录
     const [photoList, setPhotoList] = useState<QiniuItem[]>([]);
@@ -112,9 +106,9 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap }) => {
     // 大图
     const [fullSrc, setFullSrc] = useState("");
     // 打开某个目录
-    const handleOpenAlbum = (data: QiniuItem[]) => {
+    const handleOpenAlbum = (distName: string) => {
         setIsOpenAlbumHome(false);
-        setPhotoList(data);
+        setPhotoList(dataMap![distName]);
     };
     return (
         <div className="flex flex-row h-screen w-screen">
@@ -179,7 +173,6 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap }) => {
             <div className="w-full md:w-4/5 overflow-y-scroll">
                 {isOpenAlbumHome ? (
                     <AlbumHome
-                        dist={dist}
                         handleOpenAlbum={handleOpenAlbum}
                         dataMap={dataMap}
                     />
@@ -227,21 +220,27 @@ export const getServerSideProps = async () => {
         formate: true,
     });
     // 只聚合目录下的照片 根目录下的不做展示
-    // const allData = await Promise.all(
-    //     dist.map((item) => {
-    //         return Qiniu.getData({
-    //             dist: item,
-    //             formate: true,
-    //         });
-    //     })
-    // );
+    const allData = await Promise.all(
+        dist.map((item) => {
+            return Qiniu.getData({
+                dist: item,
+                formate: true,
+            });
+        })
+    );
     return {
         props: {
             dist,
-            dataMap: dist.reduce((total, item, i) => {
-                total[item] = [data[i]];
-                return total;
-            }, {} as any),
+            allData,
+            dataMap: allData.reduce((map, item, i) => {
+                const key = item?.data?.[0]?.currentDist as string;
+                map![key] = item.data;
+                return map;
+            }, {} as QiniuData["dataMap"]),
+            // dataMap: dist.reduce((total, item, i) => {
+            //     total[item] = [data[i]];
+            //     return total;
+            // }, {} as any),
         },
     };
 };

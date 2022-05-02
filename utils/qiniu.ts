@@ -41,6 +41,7 @@ class Qiniu {
                                           url: `${
                                               _.isDev() ? "http" : "https"
                                           }://${config.domain}/${item.key}`,
+                                          currentDist: dist || '/',
                                       });
                                   return total;
                               }, []),

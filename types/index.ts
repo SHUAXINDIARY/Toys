@@ -85,8 +85,12 @@ export type QiniuItem = {
     hash: string;
     fsize: number;
     md5: string;
+    // 上传时间
     putTime: number;
+    // 资源url
     url: string;
+    // 图片所在目录
+    currentDist?: string;
 };
 
 export type QiniuData = {
@@ -97,13 +101,14 @@ export type QiniuData = {
     // 所有目录
     dist: string[];
     // 服务端下发的所有目录和对应数据的映射
-    dataMap?: any;
+    dataMap?: Record<string, QiniuItem[]>;
+    // 所有数据
+    allData?: QiniuItem;
 };
 
 export interface AlbumHomeProps {
-    handleOpenAlbum: (dist: QiniuItem[]) => void;
-    dist: string[];
+    handleOpenAlbum: (distName: string) => void;
     dataMap?: any;
 }
 
-export type CommObj = Record<string, any>
+export type CommObj = Record<string, any>;
