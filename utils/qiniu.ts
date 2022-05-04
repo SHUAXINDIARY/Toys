@@ -25,7 +25,7 @@ class Qiniu {
                     // 文件访问名前缀（即空间名）
                     prefix: dist && `${dist}`,
                 },
-                (e, respBody, respInfo) => {
+                (e, respBody) => {
                     if (e) {
                         rej(e);
                     }
@@ -33,18 +33,23 @@ class Qiniu {
                     res({
                         data: !formate
                             ? items
-                            : items.reduce((total: any[], item: QiniuItem) => {
-                                  // 过滤当前目录的根路径 因为没有这张图
-                                  item.key !== dist &&
-                                      total.push({
-                                          ...item,
-                                          url: `${
-                                              _.isDev() ? "http" : "https"
-                                          }://${config.domain}/${item.key}`,
-                                          currentDist: dist || '/',
-                                      });
-                                  return total;
-                              }, []),
+                            : items
+                                  .sort(
+                                      (a: QiniuItem, b: QiniuItem) =>
+                                          b.putTime - a.putTime
+                                  )
+                                  .reduce((total: any[], item: QiniuItem) => {
+                                      // 过滤当前目录的根路径 因为没有这张图
+                                      item.key !== dist &&
+                                          total.push({
+                                              ...item,
+                                              url: `${
+                                                  _.isDev() ? "http" : "https"
+                                              }://${config.domain}/${item.key}`,
+                                              currentDist: dist || "/",
+                                          });
+                                      return total;
+                                  }, []),
                         total: items.length,
                         dist: (commonPrefixes && [...commonPrefixes]) || [],
                     });

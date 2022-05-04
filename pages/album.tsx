@@ -30,24 +30,6 @@ const Footer = [
     },
 ];
 
-const initData = async (dist: string[], updateData: any) => {
-    const allData = await Promise.all(
-        dist?.map((item) =>
-            _.req({
-                url: api.getImgList,
-                opts: {
-                    method: "post",
-                    body: JSON.stringify({ dist: item }),
-                },
-            })
-        )
-    );
-    const filterData = allData?.reduce((total: any, item, i) => {
-        total[dist[i]] = item.data;
-        return total;
-    }, {});
-    updateData(filterData || {});
-};
 // 相册列表
 const AlbumHome: FC<AlbumHomeProps> = ({
     handleOpenAlbum,
@@ -216,7 +198,7 @@ export default Album;
 
 export const getServerSideProps = async () => {
     // 获取空间下的目录
-    const { dist, data } = await Qiniu.getData({
+    const { dist } = await Qiniu.getData({
         formate: true,
     });
     // 只聚合目录下的照片 根目录下的不做展示
@@ -232,15 +214,11 @@ export const getServerSideProps = async () => {
         props: {
             dist,
             allData,
-            dataMap: allData.reduce((map, item, i) => {
+            dataMap: allData.reduce((map, item) => {
                 const key = item?.data?.[0]?.currentDist as string;
                 map![key] = item.data;
                 return map;
             }, {} as QiniuData["dataMap"]),
-            // dataMap: dist.reduce((total, item, i) => {
-            //     total[item] = [data[i]];
-            //     return total;
-            // }, {} as any),
         },
     };
 };
