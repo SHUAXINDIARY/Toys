@@ -11,7 +11,7 @@ const config = {
         AK: _.isDev() ? "" : (process.env.AK as string),
         SK: _.isDev() ? "" : (process.env.SK as string),
     },
-    domain: "img.shuaxindiary.cn",
+    domain: "img.shuaxinjs.cn",
     space: "shuaxindiary",
 };
 

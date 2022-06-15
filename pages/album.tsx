@@ -98,7 +98,7 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap, allData }) => {
             <div className="w-0 md:w-1/5 bg-black flex flex-col justify-around text-center text-white overflow-y-hidden">
                 <div className="w-[150px] h-[150px] mx-auto">
                     <Image
-                        src="https://img.shuaxindiary.cn/newavatar.jpg"
+                        src="https://img.shuaxinjs.cn/newavatar.jpg"
                         alt="avatar"
                         width="100%"
                         height="100%"
