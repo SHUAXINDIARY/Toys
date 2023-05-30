@@ -28,7 +28,12 @@ class AuthSDK {
         }
     }
     async getAuth() {
-        return this.qn;
+        if (this.qn) {
+            return this.qn;
+        } else {
+            await this.initSDK();
+            return this.qn;
+        }
     }
 }
 class Qiniu {

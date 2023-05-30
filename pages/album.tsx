@@ -53,7 +53,7 @@ const AlbumHome: FC<AlbumHomeProps> = ({
                                 height="100%"
                                 layout="responsive"
                                 quality={1}
-                                className="object-cover"
+                                className="object-contain"
                                 loading="eager"
                             />
                         </div>
@@ -94,7 +94,7 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap, allData }) => {
     };
     return (
         <div className="flex flex-row h-screen w-screen">
-            {/* iframe嵌入式配置 */}
+            {/* 左边菜单栏 */}
             <div className="w-0 md:w-1/5 bg-black flex flex-col justify-around text-center text-white overflow-y-hidden">
                 <div className="w-[150px] h-[150px] mx-auto">
                     <Image
@@ -152,6 +152,7 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap, allData }) => {
                     })}
                 </div>
             </div>
+            {/* 右边照片 */}
             <div className="w-full md:w-4/5 overflow-y-scroll">
                 {isOpenAlbumHome ? (
                     <AlbumHome
@@ -164,9 +165,9 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap, allData }) => {
                             return (
                                 <div
                                     key={item.key}
-                                    className="h-[200px] flex justify-center items-center bg-gray-100 dark:bg-gray-600">
+                                    className="flex justify-center items-center bg-gray-100 dark:bg-gray-600">
                                     <Image
-                                        src={item.url}
+                                        src={`${item.url}-webp`}
                                         alt="image"
                                         width="100%"
                                         height="100%"
@@ -189,7 +190,7 @@ const Album: NextPage<QiniuData> = ({ dist, dataMap, allData }) => {
                     </div>
                 )}
             </div>
-            {isFull && <PhotoModal src={fullSrc} closeFullModal={setIsFull} />}
+            {isFull && <PhotoModal src={`${fullSrc}-water`} closeFullModal={setIsFull} />}
         </div>
     );
 };
