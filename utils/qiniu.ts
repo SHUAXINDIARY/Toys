@@ -2,21 +2,49 @@ import qiniu from "qiniu";
 import config from "../config";
 import { QiniuData, QiniuItem } from "../types";
 import _ from "./index";
-
+import { readFile } from "fs/promises";
+import { resolve } from "path";
+class AuthSDK {
+    private qn: any;
+    constructor() {
+        this.initSDK();
+    }
+    async initSDK() {
+        if (_.isDev()) {
+            // 本地执行读取本地配置
+            const data = await readFile(
+                resolve(__dirname, "../../../config.json"),
+                {
+                    encoding: "ascii",
+                }
+            );
+            const { AK, SK } = JSON.parse(data);
+            this.qn = new qiniu.auth.digest.Mac(AK, SK);
+        } else {
+            this.qn = new qiniu.auth.digest.Mac(
+                config.qiniuyun.AK,
+                config.qiniuyun.SK
+            );
+        }
+    }
+    async getAuth() {
+        return this.qn;
+    }
+}
 class Qiniu {
     private qn;
-    constructor(ak: string, sk: string) {
-        this.qn = new qiniu.auth.digest.Mac(ak, sk);
+    constructor() {
+        this.qn = new AuthSDK();
     }
-    getBucketManager(config?: qiniu.conf.Config) {
+    async getBucketManager(config?: qiniu.conf.Config) {
         const _config = new qiniu.conf.Config();
-        return new qiniu.rs.BucketManager(this.qn, {
+        return new qiniu.rs.BucketManager(await this.qn.getAuth(), {
             ..._config,
             ...config,
         });
     }
-    getData({ dist, formate }: { dist?: string; formate?: boolean }) {
-        const bm = this.getBucketManager();
+    async getData({ dist, formate }: { dist?: string; formate?: boolean }) {
+        const bm = await this.getBucketManager();
         return new Promise<QiniuData>((res: any, rej: any) => {
             bm.listPrefix(
                 config.space,
@@ -58,4 +86,4 @@ class Qiniu {
         });
     }
 }
-export default new Qiniu(config.qiniuyun.AK, config.qiniuyun.SK);
+export default new Qiniu();

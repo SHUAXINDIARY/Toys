@@ -39,3 +39,5 @@ yarn-error.log*
 # github auth
 
 *.sh
+
+config.json
