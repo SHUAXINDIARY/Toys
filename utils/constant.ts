@@ -1,5 +1,5 @@
 import { Email, Github, Twitter, Website } from "../public/svg";
-import { HomeCardProps, UserInfoProps } from "../types/index";
+import { HomeCardProps, STATUS, UserInfoProps } from "../types/index";
 
 export const panelColors: string[] = [
     // "#fdf4ff",
@@ -41,6 +41,7 @@ export const CardDataList: HomeCardProps[] = [
         title: "Album",
         url: "/album",
         desc: "photo album",
+        status: STATUS.RENOVATED,
     },
     {
         title: "Stella",
