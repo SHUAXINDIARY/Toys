@@ -1,6 +1,13 @@
 import { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
 
+export enum STATUS {
+    // 运行中
+    RUNING = "running",
+    // 装修中
+    RENOVATED = "renovated",
+}
+
 export type LayoutType = {
     getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -31,6 +38,7 @@ export type HomeCardProps = {
     desc?: string;
     // 打开新标签页
     openNewTag?: Boolean;
+    status?: STATUS;
 };
 
 export type UserInfoProps = {
