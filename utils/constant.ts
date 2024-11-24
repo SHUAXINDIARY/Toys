@@ -38,10 +38,10 @@ export const CardDataList: HomeCardProps[] = [
         openNewTag: true,
     },
     {
-        title: "Album",
-        url: "/album",
-        desc: "photo album",
-        status: STATUS.RENOVATED,
+        title: "Arknights生涯表",
+        url: "https://arknights.shuaxinjs.cn/",
+        desc: "在线版本",
+        openNewTag: true,
     },
     {
         title: "Stella",
